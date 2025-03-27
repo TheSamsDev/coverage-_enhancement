@@ -53,13 +53,19 @@ const unclusteredPointLayer = {
       'POTENTIAL', '#E53935',
       '#9E9E9E'
     ],
-    'circle-radius': 12,
-    'circle-stroke-width': 2,
+    'circle-radius': 8,
+    'circle-stroke-width': 1.5,
     'circle-stroke-color': '#fff'
   }
 };
 
 const MapboxClusterLayer = ({ stores, onClick }) => {
+  const handleMouseEnter = (event) => {
+    const feature = event.features[0];
+    if (!feature.properties.cluster) {
+      onClick(event);
+    }
+  };
   const points = useMemo(
     () => ({
       type: 'FeatureCollection',
@@ -92,7 +98,7 @@ const MapboxClusterLayer = ({ stores, onClick }) => {
     >
       <Layer {...clusterLayer} />
       <Layer {...clusterCountLayer} />
-      <Layer {...unclusteredPointLayer} onClick={onClick} />
+      <Layer {...unclusteredPointLayer} onMouseEnter={handleMouseEnter} />
     </Source>
   );
 };

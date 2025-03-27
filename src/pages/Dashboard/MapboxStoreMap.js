@@ -42,7 +42,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '69vh' }}>
-        <div className="spinner-border text-primary" role="status">
+        <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -52,7 +52,9 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   if (!stores || stores.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '69vh' }}>
-        <div className="text-muted">No stores found</div>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
       </div>
     );
   }
@@ -96,13 +98,19 @@ const MapboxStoreMap = ({ stores: propStores }) => {
             latitude={popupInfo.latitude}
             longitude={popupInfo.longitude}
             onClose={() => setPopupInfo(null)}
+            className="store-popup"
           >
-            <div>
-              <h3>Store #{popupInfo.id}</h3>
-              <p><strong>Type:</strong> {popupInfo.type}</p>
-              <p><strong>Region:</strong> {popupInfo.region}</p>
-              <p><strong>City:</strong> {popupInfo.city}</p>
-              <p><strong>Coordinates:</strong> {popupInfo.latitude.toFixed(6)}, {popupInfo.longitude.toFixed(6)}</p>
+            <div className="store-popup-content p-3">
+              <h3 className="store-title mb-3">Store #{popupInfo.id}</h3>
+              <div className="store-details">
+                <p className="mb-2"><strong>Type:</strong> <span className={`badge bg-${popupInfo.type === 'ACQUIRED' ? 'primary' : 'danger'} ms-2`}>{popupInfo.type}</span></p>
+                <p className="mb-2"><strong>Region:</strong> <span className="ms-2">{popupInfo.region}</span></p>
+                <p className="mb-2"><strong>City:</strong> <span className="ms-2">{popupInfo.city}</span></p>
+                <p className="mb-2"><strong>Area:</strong> <span className="ms-2">{popupInfo.area || 'N/A'}</span></p>
+                <p className="mb-2"><strong>Distributor:</strong> <span className="ms-2">{popupInfo.distributor || 'N/A'}</span></p>
+                <p className="mb-2"><strong>Rank:</strong> <span className="ms-2">{popupInfo.rank || 'N/A'}</span></p>
+                <p className="mb-0"><strong>Coordinates:</strong> <span className="ms-2">{popupInfo.latitude.toFixed(6)}, {popupInfo.longitude.toFixed(6)}</span></p>
+              </div>
             </div>
           </Popup>
         )}

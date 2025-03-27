@@ -108,6 +108,7 @@ class MapsVector extends Component {
   render() {
     const { loading } = this.state;
     const displayData = this.getFilteredData();
+    const noStoresFound = !loading && (!displayData || displayData.length === 0);
     
     return (
       <React.Fragment>
@@ -121,8 +122,18 @@ class MapsVector extends Component {
               <Col lg={10}>
                 <Card>
                   <CardBody>
-                    <div id="usa-vectormap" style={{ height: "auto" }}>
-                      <MapboxStoreMap stores={displayData} />
+                    <div id="usa-vectormap" style={{ height: "69vh" }}>
+                      {loading ? (
+                        <div className="text-center p-4">
+                          <h5>Loading stores...</h5>
+                        </div>
+                      ) : noStoresFound ? (
+                        <div className="text-center p-4">
+                          <h5>No stores found for the selected filters</h5>
+                        </div>
+                      ) : (
+                        <MapboxStoreMap stores={displayData} />
+                      )}
                     </div>
                   </CardBody>
                 </Card>
