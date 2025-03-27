@@ -1,0 +1,47 @@
+-- Create stores table
+CREATE TABLE IF NOT EXISTS stores (
+    store_code VARCHAR(10) PRIMARY KEY,
+    latitude DECIMAL(10, 7),
+    longitude DECIMAL(10, 7),
+    region VARCHAR(50),
+    city VARCHAR(50),
+    area VARCHAR(50),
+    area_type VARCHAR(20),
+    channel VARCHAR(50),
+    rank CHAR(1),
+    sales_pkr DECIMAL(12, 2)
+);
+
+-- Insert store data
+INSERT INTO stores (store_code, latitude, longitude, region, city, area, area_type, channel, rank, sales_pkr) VALUES
+('S#0001', 25.0272255, 66.8915392, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor A', 'D', 221958.00),
+('S#0002', 25.0250038, 66.8856257, 'Sindh', 'Karachi', 'South', 'Industrial', 'Distributor B', 'C', 771155.00),
+('S#0003', 25.0253236, 66.8857899, 'Sindh', 'Karachi', 'South', 'Suburban', 'Direct Retailer', 'D', 231932.00),
+('S#0004', 25.034041, 66.8758458, 'Sindh', 'Karachi', 'South', 'Suburban', 'Distributor A', 'A', 1514414.00),
+('S#0005', 25.0308037, 66.8921603, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor B', 'D', 359178.00),
+('S#0006', 25.0263053, 66.8865992, 'Sindh', 'Karachi', 'South', 'Suburban', 'Distributor A', 'A', 1792743.00),
+('S#0007', 25.0253177, 66.8865103, 'Sindh', 'Karachi', 'South', 'Urban', 'Direct Retailer', 'D', 210268.00),
+('S#0008', 25.0232533, 66.8824817, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor A', 'C', 832180.00),
+('S#0009', 25.0272328, 66.8914905, 'Sindh', 'Karachi', 'South', 'Urban', 'Direct Retailer', 'B', 1203462.00),
+('S#0010', 25.0325141, 66.8794768, 'Sindh', 'Karachi', 'South', 'Suburban', 'Distributor B', 'D', 237337.00),
+('S#0011', 25.0545391, 66.8742153, 'Sindh', 'Karachi', 'South', 'Suburban', 'Distributor A', 'B', 1099890.00),
+('S#0012', 25.0275327, 66.885887, 'Sindh', 'Karachi', 'South', 'Residential', 'Distributor B', 'A', 1670006.00),
+('S#0013', 25.0294785, 66.8897938, 'Sindh', 'Karachi', 'South', 'Urban', 'Direct Retailer', 'B', 1236074.00),
+('S#0014', 25.02494, 66.8789332, 'Sindh', 'Karachi', 'South', 'Urban', 'Direct Retailer', 'B', 1012756.00),
+('S#0015', 25.0199349, 66.8762576, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor B', 'D', 275203.00),
+('S#0016', 25.025201, 66.8867394, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor B', 'B', 1339911.00),
+('S#0017', 25.0249843, 66.8887829, 'Sindh', 'Karachi', 'South', 'Urban', 'Direct Retailer', 'D', 378167.00),
+('S#0018', 25.0548031, 66.8744981, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor B', 'D', 141090.00),
+('S#0019', 25.0303068, 66.8805697, 'Sindh', 'Karachi', 'South', 'Urban', 'Direct Retailer', 'D', 429365.00),
+('S#0020', 25.0546041, 66.8742921, 'Sindh', 'Karachi', 'South', 'Residential', 'Distributor B', 'B', 1213396.00),
+('S#0021', 25.0549933, 66.8741567, 'Sindh', 'Karachi', 'South', 'Residential', 'Direct Retailer', 'C', 887201.00),
+('S#0022', 25.0261651, 66.8880172, 'Sindh', 'Karachi', 'South', 'Industrial', 'Direct Retailer', 'B', 1470455.00),
+('S#0023', 25.0249343, 66.8855121, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor A', 'A', 1866891.00),
+('S#0024', 25.0230033, 66.8758952, 'Sindh', 'Karachi', 'South', 'Urban', 'Direct Retailer', 'D', 427069.00),
+('S#0025', 25.0246074, 66.8873847, 'Sindh', 'Karachi', 'South', 'Residential', 'Direct Retailer', 'A', 1925573.00),
+('S#0026', 25.0252426, 66.8868421, 'Sindh', 'Karachi', 'South', 'Residential', 'Distributor A', 'B', 1347617.00),
+('S#0027', 25.0289411, 66.8898854, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor A', 'C', 891743.00),
+('S#0028', 25.050306, 66.8546389, 'Sindh', 'Karachi', 'South', 'Urban', 'Distributor B', 'D', 203355.00),
+('S#0029', 25.0238032, 66.8844998, 'Sindh', 'Karachi', 'South', 'Residential', 'Distributor B', 'B', 1384372.00),
+('S#0030', 25.0237447, 66.880095, 'Arkham', 'Karachi', 'South', 'Residential', 'Direct Retailer', 'B', 1362752.00),
+('S#0031', 24.893464, 67.058767, 'Sindh', 'Karachi', 'South', 'Residential', 'Direct Retailer', 'B', 1362752.00);

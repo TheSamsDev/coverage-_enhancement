@@ -1,0 +1,70 @@
+.app {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #124d9e;
+}
+
+main {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.store-map-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Preloader styles */
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #124d9e;
+  transition: width 0.3s ease;
+}
+
+.error-message {
+  color: #e53935;
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: rgba(229, 57, 53, 0.1);
+}
