@@ -8,8 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { checkLogin, apiError } from "../../store/actions";
 
 // import images
-import logodark from "../../assets/images/logo-dark.png";
-import logolight from "../../assets/images/logo-light.png";
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";
 
 const Login = (props) => {
   const navigate = useNavigate();
@@ -43,10 +43,10 @@ const Login = (props) => {
                         <div className="text-center">
                           <Link to="/" className="">
                             <img src={logodark} alt="" height="20" className="auth-logo logo-dark mx-auto" />
-                            <img src={logolight} alt="" height="20" className="auth-logo logo-light mx-auto" />
+                            <img src={logolight} alt="" height="500" className="auth-logo logo-light mx-auto" />
                           </Link>
                           <h4 className="font-size-18 mt-4">Welcome Back!</h4>
-                          <p className="text-muted">Sign in to continue to Nazox.</p>
+                          <p className="text-muted">Sign in to continue to Coverage Enhancement</p>
                         </div>
                         {props.loginError && <Alert color="danger">{props.loginError}</Alert>}
                         <div className="p-2 mt-5">
@@ -94,7 +94,7 @@ const Login = (props) => {
 
                         <div className="mt-5 text-center">
                           <p>Don't have an account? <Link to="/register" className="fw-medium text-primary"> Register </Link></p>
-                          <p>© 2021 Nazox. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesdesign</p>
+                          {/* <p>© 2025 Savtech Digital Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesdesign</p> */}
                         </div>
                       </div>
                     </Col>

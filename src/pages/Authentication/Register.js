@@ -8,7 +8,8 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // import images
-import logodark from "../../assets/images/logo-dark.png";
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";
 
 // Actions
 import { registerUser, registerUserFailed, apiError } from '../../store/actions';

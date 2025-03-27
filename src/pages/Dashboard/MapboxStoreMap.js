@@ -32,27 +32,34 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   useEffect(() => {
     setIsLoading(true);
     setStores(propStores || []);
-    // Add a small delay to ensure smooth transition
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 100);
     return () => clearTimeout(timer);
   }, [propStores]);
 
+  const handleClusterClick = (event) => {
+    const feature = event.features[0];
+    if (!feature.properties.cluster) {
+      const store = {
+        id: feature.properties.id,
+        type: feature.properties.type,
+        region: feature.properties.region,
+        city: feature.properties.city,
+        area: feature.properties.area,
+        distributor: feature.properties.distributor,
+        rank: feature.properties.rank,
+        latitude: feature.geometry.coordinates[1],
+        longitude: feature.geometry.coordinates[0]
+      };
+      setPopupInfo(store);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '69vh' }}>
         <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!stores || stores.length === 0) {
-    return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '69vh' }}>
-        <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -76,20 +83,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
       >
         <MapboxClusterLayer
           stores={stores}
-          onClick={(event) => {
-            const feature = event.features[0];
-            if (!feature.properties.cluster) {
-              const store = {
-                id: feature.properties.id,
-                type: feature.properties.type,
-                region: feature.properties.region,
-                city: feature.properties.city,
-                latitude: feature.geometry.coordinates[1],
-                longitude: feature.geometry.coordinates[0]
-              };
-              setPopupInfo(store);
-            }
-          }}
+          onClick={handleClusterClick}
         />
 
         {popupInfo && (
@@ -99,6 +93,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
             longitude={popupInfo.longitude}
             onClose={() => setPopupInfo(null)}
             className="store-popup"
+            closeOnClick={false}
           >
             <div className="store-popup-content p-3">
               <h3 className="store-title mb-3">Store #{popupInfo.id}</h3>

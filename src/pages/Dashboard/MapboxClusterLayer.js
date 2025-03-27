@@ -53,8 +53,18 @@ const unclusteredPointLayer = {
       'POTENTIAL', '#E53935',
       '#9E9E9E'
     ],
-    'circle-radius': 8,
-    'circle-stroke-width': 1.5,
+    'circle-radius': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      12,
+      8
+    ],
+    'circle-stroke-width': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      2,
+      1.5
+    ],
     'circle-stroke-color': '#fff'
   }
 };
@@ -63,9 +73,26 @@ const MapboxClusterLayer = ({ stores, onClick }) => {
   const handleMouseEnter = (event) => {
     const feature = event.features[0];
     if (!feature.properties.cluster) {
+      event.target.getMap().getCanvas().style.cursor = 'pointer';
+      event.target.setFeatureState(
+        { source: 'stores', id: feature.id },
+        { hover: true }
+      );
       onClick(event);
     }
   };
+
+  const handleMouseLeave = (event) => {
+    event.target.getMap().getCanvas().style.cursor = '';
+    if (event.features && event.features[0]) {
+      event.target.setFeatureState(
+        { source: 'stores', id: event.features[0].id },
+        { hover: false }
+      );
+    }
+    onClick(null);
+  };
+
   const points = useMemo(
     () => ({
       type: 'FeatureCollection',
@@ -98,7 +125,10 @@ const MapboxClusterLayer = ({ stores, onClick }) => {
     >
       <Layer {...clusterLayer} />
       <Layer {...clusterCountLayer} />
-      <Layer {...unclusteredPointLayer} onMouseEnter={handleMouseEnter} />
+      <Layer {...unclusteredPointLayer} 
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      />
     </Source>
   );
 };

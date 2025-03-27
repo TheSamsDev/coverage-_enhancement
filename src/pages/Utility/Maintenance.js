@@ -3,8 +3,8 @@ import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 
 //Import Logo
-import logodark from '../../assets/images/logo-dark.png';
-import logolight from '../../assets/images/logo-light.png';
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";
 import bg from "../../assets/images/maintenance-bg.png";
 
 class Maintenance extends Component {

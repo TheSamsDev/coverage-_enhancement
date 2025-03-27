@@ -4,7 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { forgetUser } from '../../store/actions';
-import logodark from "../../assets/images/logo-dark.png";
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";
 
 const ForgetPasswordPage = ({ forgetUser, forgetError, message, loading }) => {
     const { handleSubmit, control, formState: { errors } } = useForm();

@@ -12,7 +12,7 @@ import { getStores } from '../../config/stores';
 import MiniWidgets from "./MiniWidgets";
 import RevenueAnalytics from "./RevenueAnalytics";
 import SalesAnalytics from "./SalesAnalytics";
-import Shop from "./Store";
+// import Shop from "./Store";
 import EarningReports from "./EarningReports";
 import Sources from "./Sources";
 import RecentlyActivity from "./RecentlyActivity";
@@ -25,7 +25,7 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             breadcrumbItems : [
-                { title : "Nazox", link : "/" },
+                { title : "Savtech Digital", link : "/" },
                 { title : "Dashboard", link : "#" },
             ],
             reports : [
@@ -104,17 +104,17 @@ class Dashboard extends Component {
                                 <EarningReports/>
                             </Col>
                         </Row>
-                        <Row>
+                        {/* <Row>
                             <Col xl={10}>
-                                {/* Shops Map Analytics */}
+                                Shops Map Analytics
                                 <Shop stores={this.state.shopData} />
                             </Col>
 
                             <Col xl={2}>
-                                {/* Shop Filters */}
+                                Shop Filters
                                 <EarningReports/>
                             </Col>
-                        </Row>
+                        </Row> */}
                         
                         <Row>
                             {/* sources */}

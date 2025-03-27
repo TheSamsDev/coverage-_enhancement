@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import Countdown from "react-countdown";
 
 //Import Logo
-import logodark from "../../assets/images/logo-dark.png";
-import logolight from "../../assets/images/logo-light.png";
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";
 
 class CommingSoon extends Component {
     constructor() {

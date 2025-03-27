@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { Row, Col, Button, Container, Label, FormGroup, Input } from "reactstrap";
 
 // import images
-import logodark from "../../assets/images/logo-dark.png";
-import logolight from "../../assets/images/logo-light.png";
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";
 
 const Register = (props) => {
   const { handleSubmit, control, formState: { errors } } = useForm();

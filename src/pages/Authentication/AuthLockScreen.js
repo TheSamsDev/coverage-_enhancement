@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
 // Import Images
-import logodark from "../../assets/images/logo-dark.png";
-import avatar2 from "../../assets/images/users/avatar-2.jpg";
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";import avatar2 from "../../assets/images/users/avatar-2.jpg";
 
 const AuthLockScreen = () => {
     const { handleSubmit, control, formState: { errors } } = useForm();

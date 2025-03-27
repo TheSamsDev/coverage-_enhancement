@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 // import images
-import logodark from "../../assets/images/logo-dark.png";
-import logolight from "../../assets/images/logo-light.png";
+import logodark from "../../assets/images/favcion.png";
+import logolight from "../../assets/images/favcion.png";
 
 class ForgetPasswordPage extends Component {
     constructor(props) {

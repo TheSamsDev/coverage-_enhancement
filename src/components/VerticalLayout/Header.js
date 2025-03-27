@@ -31,10 +31,10 @@ import MegaMenu from "./MegaMenu";
 import { toggleRightSidebar } from "../../store/actions";
 
 //Import logo Images
-import logosmdark from "../../assets/images/logo-sm-dark.png";
-import logodark from "../../assets/images/logo-dark.png";
-import logosmlight from "../../assets/images/logo-sm-light.png";
-import logolight from "../../assets/images/logo-light.png";
+import logosmdark from "../../assets/images/Final-Logo0.png";
+import logodark from "../../assets/images/Final-Logo0.png";
+import logosmlight from "../../assets/images/Final-Logo0.png";
+import logolight from "../../assets/images/Final-Logo0.png";
 
 //Import Social Profile Images
 import github from "../../assets/images/brands/github.png";
@@ -107,19 +107,19 @@ class Header extends Component {
                             <div className="navbar-brand-box">
                                 <Link to="#" className="logo logo-dark">
                                     <span className="logo-sm">
-                                        <img src={logosmdark} alt="" height="22" />
+                                        <img src={logosmdark} alt="" height="222" />
                                     </span>
                                     <span className="logo-lg">
-                                        <img src={logodark} alt="" height="20" />
+                                        <img src={logodark} alt="" height="202" />
                                     </span>
                                 </Link>
 
                                 <Link to="#" className="logo logo-light">
                                     <span className="logo-sm">
-                                        <img src={logosmlight} alt="" height="22" />
+                                        <img src={logosmlight} alt="" height="222" />
                                     </span>
-                                    <span className="logo-lg">
-                                        <img src={logolight} alt="" height="20" />
+                                    <span className="logo-lg m-5">
+                                        <img src={logolight} alt="" height="50" />
                                     </span>
                                 </Link>
                             </div>
