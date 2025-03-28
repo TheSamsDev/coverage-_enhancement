@@ -237,7 +237,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     <div className="col-lg-2 mt-3">
       <div className="card">
         <div className="card-body">
-          <h4 className="card-title mb-4">Filter Stores ({filteredStores.length})</h4>
+          <h4 className="card-title mb-4">Total Stores ({filteredStores.length})</h4>
           
           <FormGroup className="mb-3">
             <Label>Region</Label>

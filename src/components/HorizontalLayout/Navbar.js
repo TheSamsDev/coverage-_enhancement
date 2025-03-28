@@ -78,8 +78,11 @@ class Navbar extends Component {
                                             <i className="ri-dashboard-line me-2"></i> {this.props.t('Dashboard')}
                                         </Link>
                                     </li>
+                                    <li className="nav-item">
+                                    <Link  to="/coverage-enhancement" className="nav-link">{this.props.t('Coverage Enhancement')}</Link>
+                                    </li>
 
-                                    <li className="nav-item dropdown">
+                                    {/* <li className="nav-item dropdown">
                                         <Link onClick={e => { e.preventDefault(); this.setState({ uiState: !this.state.uiState }); }} className="nav-link dropdown-toggle arrow-none" to="/#" id="topnav-uielement" role="button"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i className="ri-pencil-ruler-2-line me-2"></i>{this.props.t('UI Elements')} <div className="arrow-down"></div>
@@ -103,7 +106,7 @@ class Navbar extends Component {
                                                     <div>
                                                         <Link to="/ui-lightbox" className="dropdown-item">{this.props.t('Lightbox')}</Link>
                                                         <Link to="/ui-modals" className="dropdown-item">{this.props.t('Modals')}</Link>
-                                                        {/* <Link to="/ui-offcanvas" className="dropdown-item">{this.props.t("Offcanvas")}</Link> */}
+                                                        <Link to="/ui-offcanvas" className="dropdown-item">{this.props.t("Offcanvas")}</Link>
                                                         <Link to="/ui-rangeslider" className="dropdown-item">{this.props.t('Range Slider')}</Link>
                                                         <Link to="/ui-roundslider" className="dropdown-item">{this.props.t('Round slider')}</Link>
                                                         <Link to="/ui-session-timeout" className="dropdown-item">{this.props.t('Session Timeout')}</Link>
@@ -124,9 +127,9 @@ class Navbar extends Component {
                                             </Row>
 
                                         </div>
-                                    </li>
+                                    </li> */}
 
-                                    <li className="nav-item dropdown">
+                                    {/* <li className="nav-item dropdown">
                                         <Link onClick={e => { e.preventDefault(); this.setState({ appState: !this.state.appState }); }} className="nav-link dropdown-toggle arrow-none" to="/#" id="topnav-apps" role="button">
                                             <i className="ri-apps-2-line me-2"></i>{this.props.t('Apps')} <div className="arrow-down"></div>
                                         </Link>
@@ -167,9 +170,9 @@ class Navbar extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> */}
 
-                                    <li className="nav-item dropdown">
+                                    {/* <li className="nav-item dropdown">
                                         <Link onClick={e => {
                                             e.preventDefault();
                                             this.setState({ componentState: !this.state.componentState });
@@ -253,9 +256,9 @@ class Navbar extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> */}
 
-                                    <li className="nav-item dropdown">
+                                    {/* <li className="nav-item dropdown">
                                         <Link onClick={e => {
                                             e.preventDefault();
                                             this.setState({ extraState: !this.state.extraState });
@@ -299,7 +302,7 @@ class Navbar extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </Collapse>
                         </nav>

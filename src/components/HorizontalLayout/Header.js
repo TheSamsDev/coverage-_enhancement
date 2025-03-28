@@ -17,10 +17,10 @@ import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu";
 
 
 //Import Logos 
-import logoSmLight from "../../assets/images/logo-sm-light.png";
-import logoLight from "../../assets/images/logo-light.png";
-import logoDark from "../../assets/images/logo-dark.png";
-import logoSmDark from "../../assets/images/logo-sm-dark.png";
+import logoSmLight from "../../assets/images/favcion.png";
+import logoLight from "../../assets/images/favcion.png";
+import logoDark from "../../assets/images/favcion.png";
+import logoSmDark from "../../assets/images/favcion.png";
 
 // profile images
 import github from "../../assets/images/brands/github.png";
@@ -31,7 +31,7 @@ import mail_chimp from "../../assets/images/brands/mail_chimp.png";
 import slack from "../../assets/images/brands/slack.png";
 
 //Import mega menu image
-import megamenuImg from "../../assets/images/megamenu-img.png";
+// import megamenuImg from "../../assets/images/megamenu-img.png";
 
 // Redux Store
 import { toggleRightSidebar } from "../../store/actions";
@@ -104,19 +104,19 @@ class Header extends Component {
                             <div className="navbar-brand-box">
                                 <Link to="/" className="logo logo-dark">
                                     <span className="logo-sm">
-                                        <img src={logoSmDark} alt="" height="22" />
+                                        <img src={logoSmDark} alt="" height="49" />
                                     </span>
                                     <span className="logo-lg">
-                                        <img src={logoDark} alt="" height="20" />
+                                        <img src={logoDark} alt="" height="49" />
                                     </span>
                                 </Link>
 
                                 <Link to="/" className="logo logo-light">
                                     <span className="logo-sm">
-                                        <img src={logoSmLight} alt="" height="22" />
+                                        <img src={logoSmLight} alt="" height="49" />
                                     </span>
                                     <span className="logo-lg">
-                                        <img src={logoLight} alt="" height="20" />
+                                        <img src={logoLight} alt="" height="49" />
                                     </span>
                                 </Link>
                             </div>
@@ -133,7 +133,7 @@ class Header extends Component {
                                 </div>
                             </Form>
 
-                            <Dropdown isOpen={this.state.isMegaMenu} toggle={() => this.setState({ isMegaMenu: !this.state.isMegaMenu })} className="dropdown-mega d-none d-lg-block ms-2">
+                            {/* <Dropdown isOpen={this.state.isMegaMenu} toggle={() => this.setState({ isMegaMenu: !this.state.isMegaMenu })} className="dropdown-mega d-none d-lg-block ms-2">
                                 <DropdownToggle tag="button" type="button" className="btn header-item waves-effect">
                                     {this.props.t('Mega Menu')}{" "}
                                     <i className="mdi mdi-chevron-down"></i>
@@ -256,7 +256,7 @@ class Header extends Component {
                                     </Row>
 
                                 </DropdownMenu>
-                            </Dropdown>
+                            </Dropdown> */}
                         </div>
 
                         <div className="d-flex">
@@ -281,9 +281,9 @@ class Header extends Component {
                                 </div>
                             </div>
 
-                            <LanguageDropdown />
+                            {/* <LanguageDropdown /> */}
 
-                            <Dropdown isOpen={this.state.isProfile} toggle={() => this.setState({ isProfile: !this.state.isProfile })} className="d-none d-lg-inline-block ms-1">
+                            {/* <Dropdown isOpen={this.state.isProfile} toggle={() => this.setState({ isProfile: !this.state.isProfile })} className="d-none d-lg-inline-block ms-1">
                                 <DropdownToggle tag="button" type="button" className="btn header-item noti-icon waves-effect">
                                     <i className="ri-apps-2-line"></i>
                                 </DropdownToggle>
@@ -338,17 +338,17 @@ class Header extends Component {
                                 <Button type="button" color="none" onClick={this.toggleFullscreen} className="header-item noti-icon waves-effect" data-toggle="fullscreen">
                                     <i className="ri-fullscreen-line"></i>
                                 </Button>
-                            </div>
+                            </div> */}
 
-                            <NotificationDropdown />
+                            {/* <NotificationDropdown /> */}
 
                             <ProfileMenu />
 
-                            <div onClick={this.toggleRightbar} className="dropdown d-inline-block">
+                            {/* <div onClick={this.toggleRightbar} className="dropdown d-inline-block">
                                 <Button type="button" color="none" className="header-item noti-icon right-bar-toggle waves-effect">
                                     <i className="ri-settings-2-line"></i>
                                 </Button>
-                            </div>
+                            </div> */}
 
                         </div>
                     </div>

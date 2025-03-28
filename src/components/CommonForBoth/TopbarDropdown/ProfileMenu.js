@@ -5,7 +5,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import { withTranslation } from "react-i18next";
 
 // users
-import avatar2 from '../../../assets/images/users/avatar-2.jpg';
+import avatar2 from '../../../assets/images/favcion.png';
 
 class ProfileMenu extends Component {
 
@@ -43,9 +43,9 @@ class ProfileMenu extends Component {
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-menu-end">
                         <DropdownItem href="#"><i className="ri-user-line align-middle me-1"></i> {this.props.t('Profile')}</DropdownItem>
-                        <DropdownItem href="#"><i className="ri-wallet-2-line align-middle me-1"></i> {this.props.t('My Wallet')}</DropdownItem>
-                        <DropdownItem className="d-block" href="#"><span className="badge badge-success float-end mt-1">11</span><i className="ri-settings-2-line align-middle me-1"></i> {this.props.t('Settings')}</DropdownItem>
-                        <DropdownItem href="#"><i className="ri-lock-unlock-line align-middle me-1"></i> {this.props.t('Lock screen')}</DropdownItem>
+                        {/* <DropdownItem href="#"><i className="ri-wallet-2-line align-middle me-1"></i> {this.props.t('My Wallet')}</DropdownItem> */}
+                        {/* <DropdownItem className="d-block" href="#"><span className="badge badge-success float-end mt-1">11</span><i className="ri-settings-2-line align-middle me-1"></i> {this.props.t('Settings')}</DropdownItem> */}
+                        {/* <DropdownItem href="#"><i className="ri-lock-unlock-line align-middle me-1"></i> {this.props.t('Lock screen')}</DropdownItem> */}
                         <DropdownItem divider />
                         <DropdownItem className="text-danger" href="/logout"><i className="ri-shut-down-line align-middle me-1 text-danger"></i> {this.props.t('Logout')}</DropdownItem>
                     </DropdownMenu>

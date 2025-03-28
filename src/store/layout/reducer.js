@@ -13,15 +13,15 @@ import {
 } from "./actionTypes";
 
 const INIT_STATE = {
-	layoutType: "vertical",
+	layoutType: "horizontal",
 	layoutWidth: "fluid",
-	leftSideBarTheme: "dark",
-	leftSideBarType: "default",
+	leftSideBarTheme: "light",
+	leftSideBarType: "light",
 	topbarTheme: "light",
 	theme: "light",
 	isPreloader: false,
 	showRightSidebar: false,
-	isMobile: false
+	isMobile: true
 };
 
 const Layout = (state = INIT_STATE, action) => {
