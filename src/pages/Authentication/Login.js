@@ -42,8 +42,8 @@ const Login = (props) => {
                       <div>
                         <div className="text-center">
                           <Link to="/" className="">
-                            <img src={logodark} alt="" height="20" className="auth-logo logo-dark mx-auto" />
-                            <img src={logolight} alt="" height="500" className="auth-logo logo-light mx-auto" />
+                            <img src={logodark} alt="" height="49" className="auth-logo logo-dark mx-auto" />
+                            <img src={logolight} alt="" height="49" className="auth-logo logo-light mx-auto" />
                           </Link>
                           <h4 className="font-size-18 mt-4">Welcome Back!</h4>
                           <p className="text-muted">Sign in to continue to Coverage Enhancement</p>
