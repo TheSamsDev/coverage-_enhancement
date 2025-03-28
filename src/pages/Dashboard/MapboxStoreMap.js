@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+  import { useEffect, useState, useMemo } from 'react';
 import { Map, Marker, Popup } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxClusterLayer from './MapboxClusterLayer';
@@ -256,7 +256,6 @@ const MapboxStoreMap = ({ stores: propStores }) => {
           stores={filteredStores}
           onClick={handleClusterClick}
         />
-
         {popupInfo && (
           <Popup
             anchor="top"

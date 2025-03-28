@@ -24,7 +24,7 @@ const MapsVector = () => {
           id: store.store_code,
           latitude: store.latitude,
           longitude: store.longitude,
-          type: store.s || "ACQUIRED",
+          type: store.area_type || "ACQUIRED",
           region: store.Region,
           city: store.City,
           area: store.Area || "Unknown",
