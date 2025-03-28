@@ -8,14 +8,38 @@ import { FormGroup, Label } from 'reactstrap';
 import { MAPBOX_CONFIG } from '../../config/mapConfig';
 import './styles/MapboxStoreMap.css';
 
-const getMarkerColor = (type) => {
-  switch (type) {
-    case 'ACQUIRED':
-      return '#1E88E5';
-    case 'POTENTIAL':
-      return '#E53935';
-    default:
-      return '#9E9E9E';
+
+
+const PAKISTAN_REGIONS = {
+  'Sindh': {
+    latitude: 26.0,
+    longitude: 68.5,
+    zoom: 7
+  },
+  'Balochistan': {
+    latitude: 28.5,
+    longitude: 65.5,
+    zoom: 6.5
+  },
+  'Punjab': {
+    latitude: 31.5,
+    longitude: 72.5,
+    zoom: 6.8
+  },
+  'Khyber Pakhtunkhwa': {
+    latitude: 34.5,
+    longitude: 71.5,
+    zoom: 7
+  },
+  'Gilgit-Baltistan': {
+    latitude: 35.8,
+    longitude: 74.5,
+    zoom: 7.2
+  },
+  'Azad Kashmir': {
+    latitude: 33.9,
+    longitude: 73.8,
+    zoom: 8
   }
 };
 
@@ -168,10 +192,34 @@ const MapboxStoreMap = ({ stores: propStores }) => {
         setSelectedRegion(selectedOption);
         setSelectedCity(null);
         setSelectedArea(null);
+        if (selectedOption && PAKISTAN_REGIONS[selectedOption.value]) {
+          const regionViewport = PAKISTAN_REGIONS[selectedOption.value];
+          setViewport({
+            ...viewport,
+            latitude: regionViewport.latitude,
+            longitude: regionViewport.longitude,
+            zoom: regionViewport.zoom,
+            transitionDuration: 1000,
+            transitionEasing: t => t * (2 - t)
+          });
+        }
         break;
       case 'city':
         setSelectedCity(selectedOption);
         setSelectedArea(null);
+        if (selectedOption) {
+          const cityStore = filteredByRegion.find(store => store.city === selectedOption.value);
+          if (cityStore) {
+            setViewport({
+              ...viewport,
+              latitude: cityStore.latitude,
+              longitude: cityStore.longitude,
+              zoom: 11,
+              transitionDuration: 1000,
+              transitionEasing: t => t * (2 - t)
+            });
+          }
+        }
         break;
       case 'area':
         setSelectedArea(selectedOption);

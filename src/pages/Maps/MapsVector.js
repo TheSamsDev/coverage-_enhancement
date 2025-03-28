@@ -31,7 +31,10 @@ const MapsVector = () => {
           distributor: store.channel || "Unknown",
           rank: store.rank || "Unknown"
         }));
-    
+     console.log(mappedStores);
+        // Set the fetched data to the state variables
+        // You can also handle the data as needed in this function
+        // For example, you can update the state of the component or perform other actions
         setStores(mappedStores);
         setLoading(false);
       } catch (error) {
