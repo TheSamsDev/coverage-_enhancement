@@ -896,13 +896,13 @@ $input-btn-border-width: var(--#{$prefix}border-width);
 // For each of Bootstrap's buttons, define text, background, and border color.
 
 // scss-docs-start btn-variables
-$btn-color:  $white;
+$btn-color: $white;
 $btn-padding-y: $input-btn-padding-y;
 $btn-padding-x: $input-btn-padding-x;
 $btn-font-family: $input-btn-font-family;
 $btn-font-size: $input-btn-font-size;
 $btn-line-height: $input-btn-line-height;
-$btn-white-space: null; // Set to `nowrap` to prevent text wrapping
+$btn-white-space: null;
 
 $btn-padding-y-sm: $input-btn-padding-y-sm;
 $btn-padding-x-sm: $input-btn-padding-x-sm;
@@ -914,34 +914,39 @@ $btn-font-size-lg: $input-btn-font-size-lg;
 
 $btn-border-width: $input-btn-border-width;
 
-$btn-font-weight:                 $font-weight-normal;
-$btn-box-shadow:                  inset 0 1px 0 rgba($white, .15),0 1px 1px rgba($black, .075);
-$btn-focus-width:                 $input-btn-focus-width;
-$btn-focus-box-shadow:            $input-btn-focus-box-shadow;
-$btn-disabled-opacity:            .65;
-$btn-active-box-shadow:           inset 0 3px 5px rgba($black, .125);
+$btn-font-weight: $font-weight-normal;
+$btn-box-shadow: inset 0 1px 0 rgba($white, .15), 0 1px 1px rgba($black, .075);
+$btn-focus-width: $input-btn-focus-width;
+$btn-focus-box-shadow: $input-btn-focus-box-shadow;
+$btn-disabled-opacity: .65;
+$btn-active-box-shadow: inset 0 3px 5px rgba($black, .125);
 
-$btn-link-color:                  var(--#{$prefix}link-color);
-$btn-link-hover-color:            var(--#{$prefix}link-hover-color);
-$btn-link-disabled-color:         $gray-600;
+$btn-link-color: var(--#{$prefix}link-color);
+$btn-link-hover-color: var(--#{$prefix}link-hover-color);
+$btn-link-disabled-color: $gray-600;
 
-// Allows for customizing button radius independently from global border radius
-$btn-border-radius:               var(--#{$prefix}border-radius);
-$btn-border-radius-sm:            var(--#{$prefix}border-radius-sm);
-$btn-border-radius-lg:            var(--#{$prefix}border-radius-lg);
+$btn-border-radius: var(--#{$prefix}border-radius);
+$btn-border-radius-sm: var(--#{$prefix}border-radius-sm);
+$btn-border-radius-lg: var(--#{$prefix}border-radius-lg);
 
-$btn-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+$btn-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 
-$btn-hover-bg-shade-amount:       15%;
-$btn-hover-bg-tint-amount:        15%;
-$btn-hover-border-shade-amount:   20%;
-$btn-hover-border-tint-amount:    10%;
-$btn-active-bg-shade-amount:      20%;
-$btn-active-bg-tint-amount:       20%;
-$btn-active-border-shade-amount:  25%;
-$btn-active-border-tint-amount:   10%;
+$btn-hover-bg-shade-amount: 15%;
+$btn-hover-bg-tint-amount: 15%;
+$btn-hover-border-shade-amount: 20%;
+$btn-hover-border-tint-amount: 10%;
+$btn-active-bg-shade-amount: 20%;
+$btn-active-bg-tint-amount: 20%;
+$btn-active-border-shade-amount: 25%;
+$btn-active-border-tint-amount: 10%;
 // scss-docs-end btn-variables
-
+// New logo-inspired variables
+$logo-primary-color: #8b5cf6; // Vibrant purple
+$logo-secondary-color: #3b82f6; // Deep blue
+$logo-gradient: linear-gradient(135deg, $logo-primary-color, $logo-secondary-color);
+$logo-shadow: rgba($logo-primary-color, 0.3); // Purple-tinted shadow
+$logo-hover-shadow: rgba($logo-secondary-color, 0.4); // Blue-tinted shadow
+$cosmic-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); // Smooth animation
 
 // Forms
 
@@ -1433,6 +1438,11 @@ $card-bg: var(--#{$prefix}secondary-bg);
 $card-img-overlay-padding: $spacer;
 $card-group-margin: $grid-gutter-width * .5;
 $card-title-desc: $gray-600;
+$grid-gutter-width: 30px;
+$box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+$card-bg: #ffffff;
+$card-hover-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+$card-transition: all 0.3s ease;
 // scss-docs-end card-variables
 
 // Accordion
@@ -1702,6 +1712,9 @@ $figure-caption-color: $gray-600;
 // Breadcrumbs
 
 // scss-docs-start breadcrumb-variables
+// _variables.scss (add to the existing file)
+
+// Breadcrumbs (add to the existing breadcrumb variables section)
 $breadcrumb-font-size: null;
 $breadcrumb-padding-y: .75rem;
 $breadcrumb-padding-x: 1rem;
@@ -1713,6 +1726,15 @@ $breadcrumb-active-color: $gray-600;
 $breadcrumb-divider: quote("\F0142");
 $breadcrumb-divider-flipped: $breadcrumb-divider;
 $breadcrumb-border-radius: null;
+
+// New breadcrumb-specific logo-inspired variables
+$breadcrumb-bg: transparent; // Override default to make it transparent
+$breadcrumb-item-hover-color: $logo-primary-color;
+$breadcrumb-item-active-color: $logo-secondary-color;
+$breadcrumb-divider-color: $logo-primary-color;
+$breadcrumb-shadow: $logo-shadow;
+$breadcrumb-hover-shadow: $logo-hover-shadow;
+$breadcrumb-transition: $cosmic-transition;
 // scss-docs-end breadcrumb-variables
 
 // Carousel

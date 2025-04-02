@@ -1,25 +1,176 @@
-// 
 // _card.scss
-// 
 
 .card {
     margin-bottom: $grid-gutter-width;
+    background: $card-bg;
+    border: none;
+    border-radius: $card-border-radius;
     box-shadow: $box-shadow;
-}
-
-.card-drop {
+    transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0);
+    transition: $cosmic-transition;
+    position: relative;
+    overflow: hidden;
+  
+    // Gradient overlay
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: $logo-gradient;
+      opacity: 0.1;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.3s ease;
+    }
+  
+    &:hover {
+      box-shadow: $card-hover-shadow;
+      transform: perspective(1200px) translateZ(20px);
+      cursor: pointer;
+  
+      &::before {
+        opacity: 0.2;
+      }
+  
+      .card-body {
+        background: rgba(255, 255, 255, 0.95);
+      }
+    }
+  }
+  
+  .card-drop {
     font-size: 20px;
     line-height: 0;
-    color: inherit;
-}
-
-.card-title {
+    color: $logo-primary-color;
+  }
+  
+  .card-title {
     font-size: 15px;
     margin: 0 0 7px 0;
     font-weight: $font-weight-medium;
-}
-
-.card-title-desc {
+    color: $gray-900;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-title-desc {
     color: $card-title-desc;
     margin-bottom: 24px;
-}
+    position: relative;
+    z-index: 1;
+  }
+  
+  .card-body {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    transition: background 0.3s ease;
+  
+    .d-flex {
+      align-items: center;
+    }
+  
+    h4 {
+      font-weight: 600;
+      color: $logo-primary-color;
+      text-shadow: 0 2px 4px $logo-shadow;
+    }
+  
+    .text-primary i {
+      transition: transform 0.3s ease;
+      color: $logo-secondary-color;
+    }
+  
+    &:hover .text-primary i {
+      transform: scale(1.2);
+    }
+  }
+  
+  .card-body.border-top {
+    border-top: 1px solid rgba($logo-primary-color, 0.1);
+    padding: 12px 20px;
+    background: rgba(245, 245, 245, 0.5);
+  
+    .badge {
+      padding: 4px 8px;
+      border-radius: 10px;
+      background: rgba($logo-primary-color, 0.15);
+      color: darken($logo-primary-color, 20%);
+      transition: transform 0.3s ease;
+  
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  
+    .text-muted {
+      color: $gray-600;
+    }
+  }
+  
+  // Dark theme adjustments
+  [data-bs-theme="dark"] {
+    .card {
+      background: $body-tertiary-bg-dark;
+      box-shadow: 0 8px 30px $logo-shadow-dark;
+  
+      &::before {
+        background: $logo-gradient-dark;
+        opacity: 0.15;
+      }
+  
+      &:hover {
+        box-shadow: 0 20px 50px $logo-hover-shadow-dark;
+  
+        &::before {
+          opacity: 0.25;
+        }
+  
+        .card-body {
+          background: rgba($body-tertiary-bg-dark, 0.95);
+        }
+      }
+    }
+  
+    .card-drop {
+      color: $logo-primary-color-dark;
+    }
+  
+    .card-title {
+      color: $white;
+      text-shadow: 0 1px 2px rgba($black, 0.2);
+    }
+  
+    .card-title-desc {
+      color: $gray-400;
+    }
+  
+    .card-body {
+      h4 {
+        color: $logo-primary-color-dark;
+        text-shadow: 0 2px 4px $logo-shadow-dark;
+      }
+  
+      .text-primary i {
+        color: $logo-secondary-color-dark;
+      }
+    }
+  
+    .card-body.border-top {
+      border-top: 1px solid rgba($logo-primary-color-dark, 0.2);
+      background: rgba($body-secondary-bg-dark, 0.5);
+  
+      .badge {
+        background: rgba($logo-primary-color-dark, 0.2);
+        color: $white;
+      }
+  
+      .text-muted {
+        color: $gray-400;
+      }
+    }
+  }

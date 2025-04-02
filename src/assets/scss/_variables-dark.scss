@@ -39,6 +39,12 @@ $danger-border-subtle-dark:         shade-color($danger, 40%) ;
 $light-border-subtle-dark:          $gray-700 ;
 $dark-border-subtle-dark:           $gray-800 ;
 // scss-docs-end theme-border-subtle-dark-variables
+// Dark mode logo colors
+$logo-primary-color-dark: darken($logo-primary-color, 10%);
+$logo-secondary-color-dark: darken($logo-secondary-color, 10%);
+$logo-gradient-dark: linear-gradient(135deg, $logo-primary-color-dark, $logo-secondary-color-dark);
+$logo-shadow-dark: rgba($logo-primary-color-dark, 0.3);
+$logo-hover-shadow-dark: rgba($logo-secondary-color-dark, 0.4);
 
 $light-dark:                        $gray-700;
 $body-color-dark:                   $gray-500;
@@ -89,3 +95,10 @@ $accordion-button-active-icon-dark:  url("data:image/svg+xml,<svg xmlns='http://
 $header-item-color-dark: $gray-800;
 
 
+// Breadcrumb dark theme variables
+$breadcrumb-bg-dark: transparent;
+$breadcrumb-item-hover-color-dark: $logo-primary-color-dark;
+$breadcrumb-item-active-color-dark: $logo-secondary-color-dark;
+$breadcrumb-divider-color-dark: $logo-secondary-color-dark;
+$breadcrumb-shadow-dark: $logo-shadow-dark;
+$breadcrumb-hover-shadow-dark: $logo-hover-shadow-dark;

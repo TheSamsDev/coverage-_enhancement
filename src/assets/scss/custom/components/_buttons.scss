@@ -1,6 +1,4 @@
-//
 // _buttons.scss
-//
 
 button,
 a {
@@ -8,57 +6,108 @@ a {
 }
 
 .btn {
+  position: relative;
+  border: none;
+  border-radius: $btn-border-radius;
+  transition: $cosmic-transition;
+  box-shadow: 0 4px 15px $logo-shadow;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: $logo-gradient;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.3s ease;
+  }
+
   &:hover,
   &:active,
   &:focus,
   &.active,
   &.show {
     border-color: transparent !important;
+    box-shadow: 0 8px 25px $logo-hover-shadow;
+    transform: translateY(-2px);
+    background: $logo-gradient;
+    color: $white !important;
+
+    &::before {
+      opacity: 0.3;
+    }
   }
 }
 
 .btn-light {
-  border: 1px solid var(--#{$prefix}border-color);
+  background-color: $card-bg;
+  color: $gray-900 !important;
+  border: 1px solid rgba($logo-primary-color, 0.2);
 
   &.active,
   &:hover,
   &:focus {
-    background-color: $gray-200;
-    border: 1px solid var(--#{$prefix}border-color);
+    background: $logo-gradient;
+    color: $white !important;
+    border: none;
+    box-shadow: 0 6px 20px $logo-hover-shadow;
   }
 }
 
 .btn-check + .btn {
   &:hover {
-    border-color: var(--#{$prefix}btn-border-color) !important;
+    border-color: transparent !important;
+    background: $logo-gradient;
+    color: $white !important;
   }
 }
 
-// Rounded Buttons
 .btn-rounded {
   border-radius: 30px;
 }
 
 .btn-dark,
 .btn-secondary {
-  color: $gray-200;
+  background: $logo-primary-color;
+  color: $white;
+  box-shadow: 0 4px 15px $logo-shadow;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: $logo-gradient;
+    box-shadow: 0 8px 25px $logo-hover-shadow;
+  }
 }
 
 .btn-outline-light {
-  color: $gray-900;
+  color: $logo-primary-color !important;
+  border-color: rgba($logo-primary-color, 0.3);
+
+  &:hover {
+    background: $logo-gradient;
+    color: $white !important;
+    border-color: transparent;
+  }
 }
 
-// theme dark
+// Dark theme adjustments
 [data-bs-theme="dark"] {
   .btn-light {
     color: $white !important;
-    background-color: var(--#{$prefix}light);
-    border-color: var(--#{$prefix}light);
+    background-color: rgba($logo-secondary-color-dark, 0.2);
+    border-color: rgba($logo-secondary-color-dark, 0.3);
 
     &:hover {
       color: $white !important;
-      background-color: rgba(var(--#{$prefix}light-rgb), 0.75);
-      border-color: rgba(var(--#{$prefix}light-rgb), 0.75);
+      background: $logo-gradient-dark;
+      border-color: transparent;
+      box-shadow: 0 6px 20px $logo-hover-shadow-dark;
     }
   }
 
@@ -69,8 +118,8 @@ a {
   .btn-outline-light:focus,
   .btn-soft-light:focus {
     color: $white !important;
-    background-color: rgba(var(--#{$prefix}light-rgb), 0.75);
-    // border-color: rgba(var(--#{$prefix}light-rgb), 0.75);
+    background: $logo-gradient-dark;
+    box-shadow: 0 6px 20px $logo-hover-shadow-dark;
   }
 
   .btn-check:active + .btn-light,
@@ -89,20 +138,19 @@ a {
   .show > .btn-outline-light.dropdown-toggle,
   .show > .btn-soft-light.dropdown-toggle {
     color: $white !important;
-    background-color: rgba(var(--#{$prefix}light-rgb), 0.75);
-    // border-color: rgba(var(--#{$prefix}light-rgb), 0.75);
+    background: $logo-gradient-dark;
+    box-shadow: 0 6px 20px $logo-hover-shadow-dark;
   }
-
-  // dark
 
   .btn-dark {
     color: $white;
-    background-color: var(--#{$prefix}dark);
-    border-color: var(--#{$prefix}dark);
+    background: $logo-primary-color-dark;
+    border-color: transparent;
+    box-shadow: 0 4px 15px $logo-shadow-dark;
 
     &:hover {
-      background-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
-      border-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
+      background: $logo-gradient-dark;
+      box-shadow: 0 8px 25px $logo-hover-shadow-dark;
     }
   }
 
@@ -113,8 +161,8 @@ a {
   .btn-outline-dark:focus,
   .btn-soft-dark:focus {
     color: $white;
-    background-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
-    border-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
+    background: $logo-gradient-dark;
+    box-shadow: 0 8px 25px $logo-hover-shadow-dark;
   }
 
   .btn-check:active + .btn-dark,
@@ -132,54 +180,50 @@ a {
   .show > .btn-dark.dropdown-toggle,
   .show > .btn-outline-dark.dropdown-toggle,
   .show > .btn-soft-dark.dropdown-toggle {
-    color: var(--#{$prefix}light);
-    background-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
-    border-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
+    color: $white;
+    background: $logo-gradient-dark;
+    box-shadow: 0 8px 25px $logo-hover-shadow-dark;
   }
 
-  // outline
-
   .btn-outline-light {
-    color: $white !important;
-    border-color: var(--#{$prefix}light);
+    color: $logo-secondary-color-dark !important;
+    border-color: rgba($logo-secondary-color-dark, 0.3);
 
     &:hover {
-      color: $white;
-      background-color: rgba(var(--#{$prefix}light-rgb), 0.75);
-      border-color: rgba(var(--#{$prefix}light-rgb), 0.75);
+      color: $white !important;
+      background: $logo-gradient-dark;
+      border-color: transparent;
     }
   }
 
   .btn-outline-dark {
-    color: $white !important;
-    border-color: var(--#{$prefix}dark);
-
-    &:hover {
-      color: var(--#{$prefix}light);
-      background-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
-      border-color: rgba(var(--#{$prefix}dark-rgb), 0.75);
-    }
-  }
-
-  // soft
-
-  .btn-soft-light {
-    color: $white !important;
-    background-color: rgba(var(--#{$prefix}light-rgb), 0.1);
+    color: $logo-primary-color-dark !important;
+    border-color: rgba($logo-primary-color-dark, 0.3);
 
     &:hover {
       color: $white !important;
-      background-color: var(--#{$prefix}light);
+      background: $logo-gradient-dark;
+      border-color: transparent;
+    }
+  }
+
+  .btn-soft-light {
+    color: $logo-secondary-color-dark !important;
+    background-color: rgba($logo-secondary-color-dark, 0.1);
+
+    &:hover {
+      color: $white !important;
+      background: $logo-gradient-dark;
     }
   }
 
   .btn-soft-dark {
-    color: $white !important;
-    background-color: rgba(var(--#{$prefix}dark-rgb), 0.1);
+    color: $logo-primary-color-dark !important;
+    background-color: rgba($logo-primary-color-dark, 0.1);
 
     &:hover {
-      color: var(--#{$prefix}light);
-      background-color: var(--#{$prefix}dark);
+      color: $white !important;
+      background: $logo-gradient-dark;
     }
   }
 }

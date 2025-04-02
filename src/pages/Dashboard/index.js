@@ -4,9 +4,6 @@ import { Container, Row, Col } from "reactstrap";
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 
-//Import Database Operations
-import { getSalesData, getRevenueData, getShopData, getRecentActivity, getLatestTransactions } from '../../config/database';
-import { getStores } from '../../config/stores';
 
 //Import Components
 import MiniWidgets from "./MiniWidgets";
@@ -42,43 +39,7 @@ class Dashboard extends Component {
         }
     }
 
-    async componentDidMount() {
-        try {
-          const [sales, revenue, shops, activity, transactions, storeData] = await Promise.all([
-            getSalesData(),
-            getRevenueData(),
-            getShopData(),
-            getRecentActivity(),
-            getLatestTransactions(),
-            getStores()
-          ]);
-      
-          // Map storeData.data to match expected structure
-          const mappedStores = storeData.data.map(store => ({
-            id: store.store_code, // Use store_code as id
-            latitude: store.latitude,
-            longitude: store.longitude,
-            type: store.s || "ACQUIRED", // Default to "ACQUIRED" if type is missing
-            region: store.Region,
-            city: store.City,
-            area: store.Area || "Unknown", // Default if missing
-            distributor: store.channel || "Unknown" // Default if missing
-          }));
-      
-          this.setState({
-            salesData: sales.data,
-            revenueData: revenue.data,
-            shopData: mappedStores || [],
-            recentActivity: activity.data,
-            latestTransactions: transactions.data,
-            loading: false
-          });
-          console.log("Mapped Stores:", mappedStores);
-        } catch (error) {
-          console.error('Error fetching dashboard data:', error);
-          this.setState({ loading: false });
-        }
-      }
+   
 
     render() {
         return (
@@ -104,17 +65,7 @@ class Dashboard extends Component {
                                 <EarningReports/>
                             </Col>
                         </Row>
-                        {/* <Row>
-                            <Col xl={10}>
-                                Shops Map Analytics
-                                <Shop stores={this.state.shopData} />
-                            </Col>
-
-                            <Col xl={2}>
-                                Shop Filters
-                                <EarningReports/>
-                            </Col>
-                        </Row> */}
+                       
                         
                         <Row>
                             {/* sources */}

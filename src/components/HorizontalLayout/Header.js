@@ -344,11 +344,11 @@ class Header extends Component {
 
                             <ProfileMenu />
 
-                            {/* <div onClick={this.toggleRightbar} className="dropdown d-inline-block">
+                            <div onClick={this.toggleRightbar} className="dropdown d-inline-block">
                                 <Button type="button" color="none" className="header-item noti-icon right-bar-toggle waves-effect">
                                     <i className="ri-settings-2-line"></i>
                                 </Button>
-                            </div> */}
+                            </div>
 
                         </div>
                     </div>

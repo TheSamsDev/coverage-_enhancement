@@ -1,34 +1,123 @@
+// _breadcrumb.scss
 
-// 
-// breadcrumb.scss
-//
-
-
-// Breadcrumb item arrow
-.breadcrumb-item {
+.breadcrumb {
+    background: $breadcrumb-bg;
+    border-radius: $breadcrumb-border-radius;
+    padding: $breadcrumb-padding-y $breadcrumb-padding-x;
+    margin-bottom: $breadcrumb-margin-bottom;
+    position: relative;
+    box-shadow: 0 2px 8px $breadcrumb-shadow;
+    transition: $breadcrumb-transition;
+    overflow: hidden;
+  
+    // Subtle gradient overlay
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: $logo-gradient;
+      opacity: 0.1;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.3s ease;
+    }
+  
+    &:hover {
+      box-shadow: 0 4px 15px $breadcrumb-hover-shadow;
+  
+      &::before {
+        opacity: 0.2;
+      }
+    }
+  }
+  
+  .breadcrumb-item {
+    position: relative;
+    z-index: 1;
+  
     > a {
-        color: var(--#{$prefix}body-color);
+      color: var(--#{$prefix}body-color);
+      transition: $breadcrumb-transition;
+  
+      &:hover {
+        color: $breadcrumb-item-hover-color;
+        text-decoration: none;
+      }
     }
-    +.breadcrumb-item {
-        &::before {
-            font-family: "Material Design Icons";
-        }
+  
+    &.active {
+      color: $breadcrumb-item-active-color;
     }
-}
-
-// RTL
-
-[dir="rtl"] {
+  
+    + .breadcrumb-item {
+      padding-left: $breadcrumb-item-padding-x;
+  
+      &::before {
+        font-family: "Material Design Icons";
+        content: $breadcrumb-divider;
+        color: $breadcrumb-divider-color;
+        padding-right: $breadcrumb-item-padding-x;
+      }
+    }
+  }
+  
+  // RTL
+  [dir="rtl"] {
     .breadcrumb-item {
-        +.breadcrumb-item {
-            padding-right: $breadcrumb-item-padding-x;
-
-            &::before {
-            font-family: "Material Design Icons";
-            padding-left: 0;
-                content: "\F0141";
-            }
+      + .breadcrumb-item {
+        padding-right: $breadcrumb-item-padding-x;
+        padding-left: 0;
+  
+        &::before {
+          font-family: "Material Design Icons";
+          padding-left: 0;
+          padding-right: $breadcrumb-item-padding-x;
+          content: $breadcrumb-divider-flipped;
         }
+      }
     }
-
-}
+  }
+  
+  // Dark theme adjustments
+  [data-bs-theme="dark"] {
+    .breadcrumb {
+      background: $breadcrumb-bg-dark;
+      box-shadow: 0 2px 8px $breadcrumb-shadow-dark;
+  
+      &::before {
+        background: $logo-gradient-dark;
+        opacity: 0.15;
+      }
+  
+      &:hover {
+        box-shadow: 0 4px 15px $breadcrumb-hover-shadow-dark;
+  
+        &::before {
+          opacity: 0.25;
+        }
+      }
+    }
+  
+    .breadcrumb-item {
+      > a {
+        color: $body-color-dark;
+  
+        &:hover {
+          color: $breadcrumb-item-hover-color-dark;
+        }
+      }
+  
+      &.active {
+        color: $breadcrumb-item-active-color-dark;
+      }
+  
+      + .breadcrumb-item {
+        &::before {
+          color: $breadcrumb-divider-color-dark;
+        }
+      }
+    }
+  }

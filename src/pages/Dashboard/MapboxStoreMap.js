@@ -1,4 +1,4 @@
-  import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Map, Marker, Popup } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxClusterLayer from './MapboxClusterLayer';
@@ -63,42 +63,15 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   useEffect(() => {
     setIsLoading(true);
     setStores(propStores || []);
-
-    if (propStores && propStores.length > 0) {
-      const bounds = propStores.reduce(
-        (acc, store) => ({
-          minLng: Math.min(acc.minLng, store.longitude),
-          maxLng: Math.max(acc.maxLng, store.longitude),
-          minLat: Math.min(acc.minLat, store.latitude),
-          maxLat: Math.max(acc.maxLat, store.latitude)
-        }),
-        {
-          minLng: propStores[0].longitude,
-          maxLng: propStores[0].longitude,
-          minLat: propStores[0].latitude,
-          maxLat: propStores[0].latitude
-        }
-      );
-
-      const centerLng = (bounds.minLng + bounds.maxLng) / 2;
-      const centerLat = (bounds.minLat + bounds.maxLat) / 2;
-      const padding = 50;
-      const zoom = Math.min(
-        Math.log2(
-          360 / (bounds.maxLng - bounds.minLng + padding * 0.00001)
-        ),
-        Math.log2(
-          180 / (bounds.maxLat - bounds.minLat + padding * 0.00001)
-        )
-      );
-
+    
+    // Only set initial viewport if it hasn't been modified by filters
+    if (!selectedRegion && !selectedCity) {
       setViewport({
-        ...viewport,
-        latitude: centerLat,
-        longitude: centerLng,
-        zoom: Math.min(Math.max(zoom - 0.5, MAPBOX_CONFIG.minZoom), MAPBOX_CONFIG.maxZoom),
-        transitionDuration: 1000,
-        transitionEasing: t => t * (2 - t)
+        latitude: MAPBOX_CONFIG.defaultCenter.lat,
+        longitude: MAPBOX_CONFIG.defaultCenter.lng,
+        zoom: MAPBOX_CONFIG.defaultZoom,
+        bearing: 0,
+        pitch: 0
       });
     }
 
