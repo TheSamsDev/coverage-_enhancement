@@ -47,6 +47,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-dropzone": "^14.2.3",
     "react-flatpickr": "^3.10.13",
+    "react-globe.gl": "^2.33.2",
     "react-hook-form": "^7.53.1",
     "react-i18next": "^15.1.0",
     "react-input-mask": "^2.0.4",
@@ -72,6 +73,7 @@
     "reselect": "^5.1.1",
     "sass": "1.77.6",
     "simplebar-react": "^3.2.6",
+    "three": "^0.175.0",
     "toastr": "^2.1.4",
     "yet-another-react-lightbox": "^3.21.6"
   },
