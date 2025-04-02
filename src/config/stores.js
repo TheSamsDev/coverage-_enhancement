@@ -4,7 +4,7 @@ import { supabase } from './supabase'
 export const getStores = async () => {
     try {
         const { data, error } = await supabase
-            .from('stores')
+            .from('shops')
             .select('*')
         if (error) throw error
         return { data, error: null }
