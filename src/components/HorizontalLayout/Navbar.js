@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Collapse, Container } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { connect } from 'react-redux';
-import withRouter from "../Common/withRouter";
 
 class Navbar extends Component {
     constructor(props) {
@@ -14,54 +13,37 @@ class Navbar extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps !== this.props) {
+        if (prevProps.location.pathname !== this.props.location.pathname) {
             this.setState({});
         }
     }
 
     componentDidMount() {
-        var matchingMenuItem = null;
-        var ul = document.getElementById("navigation");
-        var items = ul.getElementsByTagName("a");
-        for (var i = 0; i < items.length; ++i) {
-            if (this.props.router.location.pathname === items[i].pathname) {
-                matchingMenuItem = items[i];
+        this.activateParentDropdown();
+    }
+
+    activateParentDropdown = () => {
+        const { pathname } = this.props.location;
+        const ul = document.getElementById("navigation");
+        const items = ul.getElementsByTagName("a");
+        for (let i = 0; i < items.length; ++i) {
+            if (pathname === items[i].pathname) {
+                const item = items[i];
+                item.classList.add("active");
+                let parent = item.parentElement;
+                while (parent) {
+                    parent.classList.add("active");
+                    parent = parent.parentElement;
+                }
                 break;
             }
         }
-        if (matchingMenuItem) {
-            this.activateParentDropdown(matchingMenuItem);
-        }
-    }
-
-    activateParentDropdown = item => {
-        item.classList.add("active");
-        const parent = item.parentElement;
-        if (parent) {
-            parent.classList.add("active");
-            const parent2 = parent.parentElement;
-            parent2.classList.add("active");
-            const parent3 = parent2.parentElement;
-            if (parent3) {
-                parent3.classList.add("active");
-                const parent4 = parent3.parentElement;
-                if (parent4) {
-                    parent4.classList.add("active");
-                    const parent5 = parent4.parentElement;
-                    if (parent5) {
-                        parent5.classList.add("active");
-                        const parent6 = parent5.parentElement;
-                        if (parent6) {
-                            parent6.classList.add("active");
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     };
 
     render() {
+        const { t, location } = this.props;
+        const { pathname } = location;
+
         return (
             <React.Fragment>
                 <div className="topnav mystical-navbar">
@@ -70,27 +52,27 @@ class Navbar extends Component {
                             <Collapse isOpen={this.props.menuOpen} className="navbar-collapse">
                                 <ul className="navbar-nav">
                                     <li className="nav-item">
-                                        <Link className="nav-link nav-3d" to="/">
+                                        <Link className={pathname === "/dashboard" ? "nav-link nav-3d active" : "nav-link nav-3d"} to="/">
                                             <i className="ri-dashboard-line me-2"></i>
-                                            <span>{this.props.t('Dashboard')}</span>
+                                            <span>{t('Dashboard')}</span>
                                         </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link to="/coverage-enhancement" className="nav-link nav-3d">
+                                        <Link to="/coverage-enhancement" className={pathname === "/coverage-enhancement" ? "nav-link nav-3d active" : "nav-link nav-3d"}>
                                             <i className="ri-signal-tower-line me-2"></i>
-                                            <span>{this.props.t('Coverage Enhancement')}</span>
+                                            <span>{t('Coverage Enhancement')}</span>
                                         </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link to="/coverage-enhancement" className="nav-link nav-3d">
+                                        <Link to="/sales-analytics" className={pathname === "/sales-analytics" ? "nav-link nav-3d active" : "nav-link nav-3d"}>
                                             <i className="ri-pie-chart-box-line me-2"></i>
-                                            <span>{this.props.t('Sales Analytics')}</span>
+                                            <span>{t('Sales Analytics')}</span>
                                         </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link to="/coverage-enhancement" className="nav-link nav-3d">
+                                        <Link to="/stores" className={pathname === "/stores" ? "nav-link nav-3d active" : "nav-link nav-3d"}>
                                             <i className="ri-store-2-line me-2"></i>
-                                            <span>{this.props.t('Stores')}</span>
+                                            <span>{t('Stores')}</span>
                                         </Link>
                                     </li>
                                 </ul>
@@ -108,4 +90,9 @@ const mapStatetoProps = state => {
     return { leftSideBarType, leftSideBarTheme };
 }
 
-export default withRouter(connect(mapStatetoProps, {})(withTranslation()(Navbar)));
+const NavbarWithRouter = (props) => {
+    const location = useLocation();
+    return <Navbar {...props} location={location} />;
+};
+
+export default connect(mapStatetoProps, {})(withTranslation()(NavbarWithRouter));

@@ -8,8 +8,6 @@ import { FormGroup, Label } from 'reactstrap';
 import { MAPBOX_CONFIG } from '../../config/mapConfig';
 import './styles/MapboxStoreMap.css';
 
-
-
 const PAKISTAN_REGIONS = {
   'Sindh': {
     latitude: 26.0,
@@ -63,7 +61,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   useEffect(() => {
     setIsLoading(true);
     setStores(propStores || []);
-    
+
     // Only set initial viewport if it hasn't been modified by filters
     if (!selectedRegion && !selectedCity) {
       setViewport({
@@ -104,7 +102,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     return uniqueRegions.map(region => ({ value: region, label: region }));
   }, [stores]);
 
-  const filteredByRegion = useMemo(() => 
+  const filteredByRegion = useMemo(() =>
     stores.filter(store => !selectedRegion || store.region === selectedRegion?.value),
     [stores, selectedRegion]
   );
@@ -114,7 +112,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     return uniqueCities.map(city => ({ value: city, label: city }));
   }, [filteredByRegion]);
 
-  const filteredByCity = useMemo(() => 
+  const filteredByCity = useMemo(() =>
     filteredByRegion.filter(store => !selectedCity || store.city === selectedCity?.value),
     [filteredByRegion, selectedCity]
   );
@@ -134,17 +132,17 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     return uniqueRanks.map(rank => ({ value: rank, label: rank }));
   }, [stores]);
 
-  const filteredByArea = useMemo(() => 
+  const filteredByArea = useMemo(() =>
     filteredByCity.filter(store => !selectedArea || store.area === selectedArea?.value),
     [filteredByCity, selectedArea]
   );
 
-  const filteredByDistributor = useMemo(() => 
+  const filteredByDistributor = useMemo(() =>
     filteredByArea.filter(store => !selectedDistributor || store.distributor === selectedDistributor?.value),
     [filteredByArea, selectedDistributor]
   );
 
-  const filteredStores = useMemo(() => 
+  const filteredStores = useMemo(() =>
     filteredByDistributor.filter(store => !selectedRank || store.rank === selectedRank?.value),
     [filteredByDistributor, selectedRank]
   );
@@ -210,123 +208,117 @@ const MapboxStoreMap = ({ stores: propStores }) => {
 
   return (
     <div className="store-map-container">
-      <div className="row">
-        <div className="col-lg-10">
-          <Map
-        {...viewport}
-        onMove={evt => setViewport(evt.viewState)}
-        style={{ width: '100%', height: '69vh' }}
-        mapStyle={MAPBOX_CONFIG.mapStyle}
-        mapboxAccessToken={MAPBOX_CONFIG.accessToken}
-        maxZoom={MAPBOX_CONFIG.maxZoom}
-        minZoom={MAPBOX_CONFIG.minZoom}
-        maxBounds={[
-          [MAPBOX_CONFIG.bounds.west, MAPBOX_CONFIG.bounds.south],
-          [MAPBOX_CONFIG.bounds.east, MAPBOX_CONFIG.bounds.north]
-        ]}
-      >
-        <MapboxClusterLayer
-          stores={filteredStores}
-          onClick={handleClusterClick}
-        />
-        {popupInfo && (
-          <Popup
-            anchor="top"
-            latitude={popupInfo.latitude}
-            longitude={popupInfo.longitude}
-            onClose={() => setPopupInfo(null)}
-            className="store-popup"
-            closeOnClick={false}
-          >
-            <div className="store-popup-content p-3">
-              <h3 className="store-title mb-3">Store #{popupInfo.id}</h3>
-              <div className="store-details">
-                <p className="mb-2"><strong>Type:</strong> <span className={`badge bg-${popupInfo.type === 'ACQUIRED' ? 'primary' : 'danger'} ms-2`}>{popupInfo.type}</span></p>
-                <p className="mb-2"><strong>Region:</strong> <span className="ms-2">{popupInfo.region}</span></p>
-                <p className="mb-2"><strong>City:</strong> <span className="ms-2">{popupInfo.city}</span></p>
-                <p className="mb-2"><strong>Area:</strong> <span className="ms-2">{popupInfo.area || 'N/A'}</span></p>
-                <p className="mb-2"><strong>Distributor:</strong> <span className="ms-2">{popupInfo.distributor || 'N/A'}</span></p>
-                <p className="mb-2"><strong>Rank:</strong> <span className="ms-2">{popupInfo.rank || 'N/A'}</span></p>
-                <p className="mb-0"><strong>Coordinates:</strong> <span className="ms-2">{popupInfo.latitude.toFixed(6)}, {popupInfo.longitude.toFixed(6)}</span></p>
-              </div>
-            </div>
-          </Popup>
-        )}
-      </Map>
-    </div>
-    <div className="col-lg-2 mt-3">
-      <div className="card">
-        <div className="card-body">
-          <h4 className="card-title mb-4">Total Stores ({filteredStores.length})</h4>
-          
-          <FormGroup className="mb-3">
-            <Label>Region</Label>
-            <Select
-              value={selectedRegion}
-              options={regions}
-              className="basic-select"
-              classNamePrefix="select"
-              onChange={handleFilterChange('region')}
-              placeholder="Select Region..."
-              isClearable
-            />
-          </FormGroup>
+      <div className="filters-container">
+        <h4 className="mb-4">Total Stores ({filteredStores.length})</h4>
 
-          <FormGroup className="mb-3">
-            <Label>City</Label>
-            <Select
-              value={selectedCity}
-              options={cities}
-              className="basic-select"
-              classNamePrefix="select"
-              onChange={handleFilterChange('city')}
-              placeholder="Select City..."
-              isClearable
-            />
-          </FormGroup>
+        <FormGroup className="mb-3">
+          <Label>Region</Label>
+          <Select
+            value={selectedRegion}
+            options={regions}
+            className="basic-select"
+            classNamePrefix="select"
+            onChange={handleFilterChange('region')}
+            placeholder="Select Region..."
+            isClearable
+          />
+        </FormGroup>
 
-          <FormGroup className="mb-3">
-            <Label>Area</Label>
-            <Select
-              value={selectedArea}
-              options={areas}
-              className="basic-select"
-              classNamePrefix="select"
-              onChange={handleFilterChange('area')}
-              placeholder="Select Area..."
-              isClearable
-            />
-          </FormGroup>
+        <FormGroup className="mb-3">
+          <Label>City</Label>
+          <Select
+            value={selectedCity}
+            options={cities}
+            className="basic-select"
+            classNamePrefix="select"
+            onChange={handleFilterChange('city')}
+            placeholder="Select City..."
+            isClearable
+          />
+        </FormGroup>
 
-          <FormGroup className="mb-3">
-            <Label>Distributor</Label>
-            <Select
-              value={selectedDistributor}
-              options={distributors}
-              className="basic-select"
-              classNamePrefix="select"
-              onChange={handleFilterChange('distributor')}
-              placeholder="Select Distributor..."
-              isClearable
-            />
-          </FormGroup>
+        <FormGroup className="mb-3">
+          <Label>Area</Label>
+          <Select
+            value={selectedArea}
+            options={areas}
+            className="basic-select"
+            classNamePrefix="select"
+            onChange={handleFilterChange('area')}
+            placeholder="Select Area..."
+            isClearable
+          />
+        </FormGroup>
 
-          <FormGroup className="mb-3">
-            <Label>Rank</Label>
-            <Select
-              value={selectedRank}
-              options={ranks}
-              className="basic-select"
-              classNamePrefix="select"
-              onChange={handleFilterChange('rank')}
-              placeholder="Select Rank..."
-              isClearable
-            />
-          </FormGroup>
-        </div>
+        <FormGroup className="mb-3">
+          <Label>Distributor</Label>
+          <Select
+            value={selectedDistributor}
+            options={distributors}
+            className="basic-select"
+            classNamePrefix="select"
+            onChange={handleFilterChange('distributor')}
+            placeholder="Select Distributor..."
+            isClearable
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <Label>Rank</Label>
+          <Select
+            value={selectedRank}
+            options={ranks}
+            className="basic-select"
+            classNamePrefix="select"
+            onChange={handleFilterChange('rank')}
+            placeholder="Select Rank..."
+            isClearable
+          />
+        </FormGroup>
       </div>
-    </div>
-    </div>
+      <div className="map-container">
+        <Map
+          {...viewport}
+          onMove={evt => setViewport(evt.viewState)}
+          style={{ width: '100%', height: '100%' }}
+          mapStyle={MAPBOX_CONFIG.mapStyle}
+          mapboxAccessToken={MAPBOX_CONFIG.accessToken}
+          maxZoom={MAPBOX_CONFIG.maxZoom}
+          minZoom={MAPBOX_CONFIG.minZoom}
+          maxBounds={[
+            [MAPBOX_CONFIG.bounds.west, MAPBOX_CONFIG.bounds.south],
+            [MAPBOX_CONFIG.bounds.east, MAPBOX_CONFIG.bounds.north]
+          ]}
+        >
+          <MapboxClusterLayer
+            stores={filteredStores}
+            onClick={handleClusterClick}
+          />
+          {popupInfo && (
+            <Popup
+              anchor="top"
+              latitude={popupInfo.latitude}
+              longitude={popupInfo.longitude}
+              onClose={() => setPopupInfo(null)}
+              className="store-popup"
+              closeOnClick={false}
+            >
+              <div className="store-popup-content p-3">
+                <h3 className="store-title mb-3">Store #{popupInfo.id}</h3>
+                <div className="store-details">
+                  <p className="mb-2"><strong>Type:</strong> <span className={`badge bg-${popupInfo.type === 'ACQUIRED' ? 'primary' : 'danger'} ms-2`}>{popupInfo.type}</span></p>
+                  <p className="mb-2"><strong>Region:</strong> <span className="ms-2">{popupInfo.region}</span></p>
+                  <p className="mb-2"><strong>City:</strong> <span className="ms-2">{popupInfo.city}</span></p>
+                  <p className="mb-2"><strong>Area:</strong> <span className="ms-2">{popupInfo.area || 'N/A'}</span></p>
+                  <p className="mb-2"><strong>Distributor:</strong> <span className="ms-2">{popupInfo.distributor || 'N/A'}</span></p>
+                  <p className="mb-2"><strong>Rank:</strong> <span className="ms-2">{popupInfo.rank || 'N/A'}</span></p>
+                  <p className="mb-0"><strong>Coordinates:</strong> <span className="ms-2">{popupInfo.latitude.toFixed(6)}, {popupInfo.longitude.toFixed(6)}</span></p>
+                </div>
+              </div>
+            </Popup>
+          )}
+        </Map>
+      </div>
     </div>
   );
 };

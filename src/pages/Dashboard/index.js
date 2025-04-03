@@ -45,9 +45,9 @@ class Dashboard extends Component {
         return (
             <React.Fragment>
                 <div className="page-content">
-                    <Container fluid>
+                    {/* <Container fluid> */}
 
-                    <Breadcrumbs title="Dashboard" breadcrumbItems={this.state.breadcrumbItems} />
+                    {/* <Breadcrumbs title="Dashboard" breadcrumbItems={this.state.breadcrumbItems} /> */}
                         <Row>
                             <Col xl={8}>
                                 <Row>
@@ -86,7 +86,7 @@ class Dashboard extends Component {
                             <LatestTransactions/>
                         </Row>
 
-                    </Container> 
+                    {/* </Container>  */}
                 </div>
             </React.Fragment>
         );

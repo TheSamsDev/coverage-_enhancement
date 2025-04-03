@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, CardBody, Container } from "reactstrap";
 import { getStores } from '../../config/stores';
-import Breadcrumbs from "../../components/Common/Breadcrumb";
+// import Breadcrumbs from "../../components/Common/Breadcrumb";
 import MapboxStoreMap from "../Dashboard/MapboxStoreMap";
 
 const MapsVector = () => {
   const [loading, setLoading] = useState(true);
   const [stores, setStores] = useState([]);
 
-  const breadcrumbItems = [
-    { title: "Coverage Enhancement", link: "#" }
-  ];
+  // const breadcrumbItems = [
+  //   { title: "Coverage Enhancement", link: "#" }
+  // ];
 
   useEffect(() => {
     const fetchData = async () => {
