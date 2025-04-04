@@ -611,7 +611,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
               <AccordionDetails>
                 {" "}
                 {/* Blue background for details */}
-                <Typography>No filters applied</Typography>
+                <Typography>Work In Progress</Typography>
               </AccordionDetails>
             </Accordion>
           </div>

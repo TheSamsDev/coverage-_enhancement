@@ -148,12 +148,12 @@ class Header extends Component {
                         {this.props.t("Coming Soon")}
                       </Link>
                     </li>
-                    <li className="nav-item ck-disabled">
+                    {/* <li className="nav-item ck-disabled">
                       <Link to="/" className={`nav-link ${this.isActive("/stores")}`}>
                         <i className="ri-store-2-line me-2"></i>
                         {this.props.t("Coming Soon")}
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </Collapse>
               </nav>
