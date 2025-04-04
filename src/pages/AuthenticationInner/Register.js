@@ -36,7 +36,7 @@ const Register = (props) => {
                       <div>
                         <div className="text-center">
                           <div>
-                            <Link to="/dashboard" className="logo">
+                            <Link to="/coverage-enhancement" className="logo">
                               <img
                                 src={logodark}
                                 height="20"

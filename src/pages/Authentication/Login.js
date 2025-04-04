@@ -12,7 +12,7 @@ import { checkLogin, apiError } from "../../store/actions";
 import logodark from "../../assets/images/favcion.png";
 import logolight from "../../assets/images/favcion.png";
 
-// Custom CSS for light mode with Mapbox
+// Custom CSS for light mode without Mapbox-specific styles
 const customStyles = `
   .auth-body-bg {
     background: #f5f7fa; /* Light gray background for light mode */
@@ -31,13 +31,13 @@ const customStyles = `
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   .map-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
+    z-index: 0; /* Ensure map stays behind content */
   }
 `;
 
@@ -59,43 +59,26 @@ const Login = (props) => {
     styleSheet.textContent = customStyles;
     document.head.appendChild(styleSheet);
 
-    // Initialize Mapbox
+    // Initialize Mapbox for a global Earth view
     mapboxgl.accessToken = 'pk.eyJ1Ijoic3llZHphbWFuMDA5NiIsImEiOiJjbThxZGltbGYwaDA4MmtzYW55eHJvazc1In0.x4yA3Enz1S-DtCrrGrPpaQ'; // Replace with your Mapbox token
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v10', // Light map style for light mode
-      // center: [67.0011, 24.8607], // Karachi, Pakistan coordinates
-      center: [74.3436, 31.5497], // Lahore, Pakistan coordinates
-      zoom: 15, // Higher zoom to show buildings
-      pitch: 60, // 3D tilt
+      style: 'mapbox://styles/mapbox/satellite-streets-v12', // Satellite view for global Earth
+      center: [0, 0], // Center at the equator and prime meridian
+      zoom: 1, // Zoom level to show the entire Earth
+      pitch: 0, // No tilt for a top-down view
       bearing: 0, // Initial bearing
-      interactive: false, // Disable user interaction
+      interactive: true, // Disable user interaction
     });
 
-    // Add 3D buildings when the map loads
+    // Continuous Earth rotation animation
+    let bearing = 0;
+    const animateMap = () => {
+      bearing = (bearing + 0.1) % 360; // Slower rotation for a smoother Earth effect
+      map.current.setBearing(bearing);
+      requestAnimationFrame(animateMap); // Loop the animation
+    };
     map.current.on('load', () => {
-      map.current.addLayer({
-        id: '3d-buildings',
-        source: 'composite',
-        'source-layer': 'building',
-        filter: ['==', 'extrude', 'true'],
-        type: 'fill-extrusion',
-        minzoom: 14, // Ensure buildings appear
-        paint: {
-          'fill-extrusion-color': '#0056b3', // Deep blue buildings for light mode
-          'fill-extrusion-height': ['get', 'height'],
-          'fill-extrusion-base': ['get', 'base_height'],
-          'fill-extrusion-opacity': 0.9, // Slightly more opaque
-        },
-      });
-
-      // Continuous rotation animation
-      let bearing = 0;
-      const animateMap = () => {
-        bearing = (bearing + 0.5) % 360; // Increment bearing for continuous rotation
-        map.current.setBearing(bearing);
-        requestAnimationFrame(animateMap); // Loop the animation
-      };
       requestAnimationFrame(animateMap);
     });
 
@@ -208,7 +191,7 @@ const Login = (props) => {
               </div>
             </Col>
             <Col lg={8}>
-              {/* Mapbox container for 3D street map */}
+              {/* Mapbox container for global Earth view */}
               <div ref={mapContainer} className="map-container" />
             </Col>
           </Row>

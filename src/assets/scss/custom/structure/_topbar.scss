@@ -99,9 +99,9 @@
     }
 }
 
-.page-content {
-    padding: calc(#{$header-height} + #{$grid-gutter-width}) calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
-}
+// .page-content {
+//     padding: calc(#{$header-height} + #{$grid-gutter-width}) calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
+// }
 
 .header-item {
     height: $header-height;
@@ -289,10 +289,10 @@ body[data-layout="horizontal"] {
     .navbar-brand-box {
         width: auto;
     }
-    .page-content {
-        margin-top: $header-height;
+    // .page-content {
+    //     margin-top: $header-height;
         padding: calc(55px + #{$grid-gutter-width}) calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
-    }    
+    // }    
 }
 
 @media (max-width: 992px) { 

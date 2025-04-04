@@ -1,55 +1,31 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Map, Marker, Popup } from 'react-map-gl/mapbox';
+import { Map, Source, Layer } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxClusterLayer from './MapboxClusterLayer';
 import Select from 'react-select';
-import { FormGroup, Label } from 'reactstrap';
-
+import { FormGroup, Label, Button, Input } from 'reactstrap';
 import { MAPBOX_CONFIG } from '../../config/mapConfig';
 import './styles/MapboxStoreMap.css';
+import pakistanGeoJSON from '../../assets/pk.json';
 
 const PAKISTAN_REGIONS = {
-  'Sindh': {
-    latitude: 26.0,
-    longitude: 68.5,
-    zoom: 7
-  },
-  'Balochistan': {
-    latitude: 28.5,
-    longitude: 65.5,
-    zoom: 6.5
-  },
-  'Punjab': {
-    latitude: 31.5,
-    longitude: 72.5,
-    zoom: 6.8
-  },
-  'Khyber Pakhtunkhwa': {
-    latitude: 34.5,
-    longitude: 71.5,
-    zoom: 7
-  },
-  'Gilgit-Baltistan': {
-    latitude: 35.8,
-    longitude: 74.5,
-    zoom: 7.2
-  },
-  'Azad Kashmir': {
-    latitude: 33.9,
-    longitude: 73.8,
-    zoom: 8
-  }
+  'Sindh': { latitude: 26.0, longitude: 68.5, zoom: 7 },
+  'Balochistan': { latitude: 28.5, longitude: 65.5, zoom: 6.5 },
+  'Punjab': { latitude: 31.5, longitude: 72.5, zoom: 6.8 },
+  'Khyber Pakhtunkhwa': { latitude: 34.5, longitude: 71.5, zoom: 7 },
+  'Gilgit-Baltistan': { latitude: 35.8, longitude: 74.5, zoom: 7.2 },
+  'Azad Kashmir': { latitude: 33.9, longitude: 73.8, zoom: 8 }
 };
 
 const MapboxStoreMap = ({ stores: propStores }) => {
   const [stores, setStores] = useState(propStores || []);
-  const [popupInfo, setPopupInfo] = useState(null);
+  const [showStores, setShowStores] = useState(false); // Default inactive
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRegion, setSelectedRegion] = useState(null);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [selectedArea, setSelectedArea] = useState(null);
-  const [selectedDistributor, setSelectedDistributor] = useState(null);
-  const [selectedRank, setSelectedRank] = useState(null);
+  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedAreas, setSelectedAreas] = useState([]);
+  const [selectedTerritories, setSelectedTerritories] = useState([]);
+  const [selectedDistributors, setSelectedDistributors] = useState([]);
+  const [selectedFilterType, setSelectedFilterType] = useState(null);
   const [viewport, setViewport] = useState({
     latitude: MAPBOX_CONFIG.defaultCenter.lat,
     longitude: MAPBOX_CONFIG.defaultCenter.lng,
@@ -62,8 +38,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     setIsLoading(true);
     setStores(propStores || []);
 
-    // Only set initial viewport if it hasn't been modified by filters
-    if (!selectedRegion && !selectedCity) {
+    if (!selectedRegions.length) {
       setViewport({
         latitude: MAPBOX_CONFIG.defaultCenter.lat,
         longitude: MAPBOX_CONFIG.defaultCenter.lng,
@@ -79,73 +54,151 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     return () => clearTimeout(timer);
   }, [propStores]);
 
-  const handleClusterClick = (event) => {
-    const feature = event.features[0];
-    if (!feature.properties.cluster) {
-      const store = {
-        id: feature.properties.id,
-        type: feature.properties.type,
-        region: feature.properties.region,
-        city: feature.properties.city,
-        area: feature.properties.area,
-        distributor: feature.properties.distributor,
-        rank: feature.properties.rank,
-        latitude: feature.geometry.coordinates[1],
-        longitude: feature.geometry.coordinates[0]
-      };
-      setPopupInfo(store);
-    }
+  const handleFilterTypeChange = (filterType) => {
+    setSelectedFilterType(filterType);
+    setSelectedRegions([]);
+    setSelectedAreas([]);
+    setSelectedTerritories([]);
+    setSelectedDistributors([]);
+    setViewport({
+      latitude: MAPBOX_CONFIG.defaultCenter.lat,
+      longitude: MAPBOX_CONFIG.defaultCenter.lng,
+      zoom: MAPBOX_CONFIG.defaultZoom,
+      bearing: 0,
+      pitch: 0
+    });
+    // Note: Not resetting showStores here to maintain its state
   };
+
+  const handleClusterClick = () => {};
 
   const regions = useMemo(() => {
     const uniqueRegions = [...new Set(stores.map(store => store.region))];
     return uniqueRegions.map(region => ({ value: region, label: region }));
   }, [stores]);
 
-  const filteredByRegion = useMemo(() =>
-    stores.filter(store => !selectedRegion || store.region === selectedRegion?.value),
-    [stores, selectedRegion]
-  );
-
-  const cities = useMemo(() => {
-    const uniqueCities = [...new Set(filteredByRegion.map(store => store.city))];
-    return uniqueCities.map(city => ({ value: city, label: city }));
-  }, [filteredByRegion]);
-
-  const filteredByCity = useMemo(() =>
-    filteredByRegion.filter(store => !selectedCity || store.city === selectedCity?.value),
-    [filteredByRegion, selectedCity]
-  );
-
   const areas = useMemo(() => {
-    const uniqueAreas = [...new Set(filteredByCity.map(store => store.area))];
+    const uniqueAreas = [...new Set(stores.map(store => store.area))];
     return uniqueAreas.map(area => ({ value: area, label: area }));
-  }, [filteredByCity]);
+  }, [stores]);
+
+  const territories = useMemo(() => {
+    const uniqueTerritories = [...new Set(stores.map(store => store.territory))];
+    return uniqueTerritories.map(territory => ({ value: territory, label: territory }));
+  }, [stores]);
 
   const distributors = useMemo(() => {
     const uniqueDistributors = [...new Set(stores.map(store => store.distributor))];
     return uniqueDistributors.map(distributor => ({ value: distributor, label: distributor }));
   }, [stores]);
 
-  const ranks = useMemo(() => {
-    const uniqueRanks = [...new Set(stores.map(store => store.rank))];
-    return uniqueRanks.map(rank => ({ value: rank, label: rank }));
-  }, [stores]);
+  const filteredStores = useMemo(() => {
+    if (!showStores) {
+      return [];
+    }
+    if (!selectedRegions.length && !selectedAreas.length && !selectedTerritories.length && !selectedDistributors.length) {
+      return stores;
+    }
+    return stores.filter(store => {
+      const regionMatch = !selectedRegions.length || selectedRegions.some(region => region.value === store.region);
+      const areaMatch = !selectedAreas.length || selectedAreas.some(area => area.value === store.area);
+      const territoryMatch = !selectedTerritories.length || selectedTerritories.some(territory => territory.value === store.territory);
+      const distributorMatch = !selectedDistributors.length || selectedDistributors.some(distributor => distributor.value === store.distributor);
+      return regionMatch && areaMatch && territoryMatch && distributorMatch;
+    });
+  }, [stores, selectedRegions, selectedAreas, selectedTerritories, selectedDistributors, showStores]);
 
-  const filteredByArea = useMemo(() =>
-    filteredByCity.filter(store => !selectedArea || store.area === selectedArea?.value),
-    [filteredByCity, selectedArea]
-  );
+  const handleFilterChange = (filterType) => (selectedOptions) => {
+    const options = selectedOptions || [];
+    switch (filterType) {
+      case 'region':
+        setSelectedRegions(options);
+        break;
+      case 'area':
+        setSelectedAreas(options);
+        break;
+      case 'territory':
+        setSelectedTerritories(options);
+        break;
+      case 'distributor':
+        setSelectedDistributors(options);
+        break;
+      default:
+        break;
+    }
+    // Note: Removed setShowStores(false) to maintain button state
+  };
 
-  const filteredByDistributor = useMemo(() =>
-    filteredByArea.filter(store => !selectedDistributor || store.distributor === selectedDistributor?.value),
-    [filteredByArea, selectedDistributor]
-  );
+  const handleResetAll = () => {
+    setSelectedRegions([]);
+    setSelectedAreas([]);
+    setSelectedTerritories([]);
+    setSelectedDistributors([]);
+    setSelectedFilterType(null);
+    setShowStores(false); // Reset deactivates the button
+    setViewport({
+      latitude: MAPBOX_CONFIG.defaultCenter.lat,
+      longitude: MAPBOX_CONFIG.defaultCenter.lng,
+      zoom: MAPBOX_CONFIG.defaultZoom,
+      bearing: 0,
+      pitch: 0
+    });
+  };
 
-  const filteredStores = useMemo(() =>
-    filteredByDistributor.filter(store => !selectedRank || store.rank === selectedRank?.value),
-    [filteredByDistributor, selectedRank]
-  );
+  const handleResetFilters = () => {
+    setSelectedFilterType(null);
+    setSelectedRegions([]);
+    setSelectedAreas([]);
+    setSelectedTerritories([]);
+    setSelectedDistributors([]);
+    setShowStores(false); // Reset deactivates the button
+    setViewport({
+      latitude: MAPBOX_CONFIG.defaultCenter.lat,
+      longitude: MAPBOX_CONFIG.defaultCenter.lng,
+      zoom: MAPBOX_CONFIG.defaultZoom,
+      bearing: 0,
+      pitch: 0
+    });
+  };
+
+  const handleLoadCMD = () => {
+    console.log("Load CMD clicked");
+  };
+
+  const provinceLayerStyle = {
+    id: 'provinces-fill',
+    type: 'fill',
+    source: 'pakistan-provinces',
+    paint: {
+      'fill-color': '#808080',
+      'fill-opacity': 0.5
+    }
+  };
+
+  const provinceOutlineStyle = {
+    id: 'provinces-outline',
+    type: 'line',
+    source: 'pakistan-provinces',
+    paint: {
+      'line-color': '#000000',
+      'line-width': 1
+    }
+  };
+
+  const highlightedRegionStyle = {
+    id: 'highlighted-region',
+    type: 'fill',
+    source: 'pakistan-provinces',
+    paint: {
+      'fill-color': '#0066ff',
+      'fill-opacity': 0.6
+    },
+    filter: selectedFilterType === 'region'
+      ? (selectedRegions.length
+          ? ['in', 'NAME_1'].concat(selectedRegions.map(region => region.value))
+          : ['in', 'NAME_1'].concat(regions.map(region => region.value)))
+      : ['in', 'NAME_1', '']
+  };
 
   if (isLoading) {
     return (
@@ -157,167 +210,156 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     );
   }
 
-  const handleFilterChange = (filterType) => (selectedOption) => {
-    switch (filterType) {
-      case 'region':
-        setSelectedRegion(selectedOption);
-        setSelectedCity(null);
-        setSelectedArea(null);
-        if (selectedOption && PAKISTAN_REGIONS[selectedOption.value]) {
-          const regionViewport = PAKISTAN_REGIONS[selectedOption.value];
-          setViewport({
-            ...viewport,
-            latitude: regionViewport.latitude,
-            longitude: regionViewport.longitude,
-            zoom: regionViewport.zoom,
-            transitionDuration: 1000,
-            transitionEasing: t => t * (2 - t)
-          });
-        }
-        break;
-      case 'city':
-        setSelectedCity(selectedOption);
-        setSelectedArea(null);
-        if (selectedOption) {
-          const cityStore = filteredByRegion.find(store => store.city === selectedOption.value);
-          if (cityStore) {
-            setViewport({
-              ...viewport,
-              latitude: cityStore.latitude,
-              longitude: cityStore.longitude,
-              zoom: 11,
-              transitionDuration: 1000,
-              transitionEasing: t => t * (2 - t)
-            });
-          }
-        }
-        break;
-      case 'area':
-        setSelectedArea(selectedOption);
-        break;
-      case 'distributor':
-        setSelectedDistributor(selectedOption);
-        break;
-      case 'rank':
-        setSelectedRank(selectedOption);
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
     <div className="store-map-container">
-      <div className="filters-container">
-        <h4 className="mb-4">Total Stores ({filteredStores.length})</h4>
-
-        <FormGroup className="mb-3">
-          <Label>Region</Label>
-          <Select
-            value={selectedRegion}
-            options={regions}
-            className="basic-select"
-            classNamePrefix="select"
-            onChange={handleFilterChange('region')}
-            placeholder="Select Region..."
-            isClearable
-          />
-        </FormGroup>
-
-        <FormGroup className="mb-3">
-          <Label>City</Label>
-          <Select
-            value={selectedCity}
-            options={cities}
-            className="basic-select"
-            classNamePrefix="select"
-            onChange={handleFilterChange('city')}
-            placeholder="Select City..."
-            isClearable
-          />
-        </FormGroup>
-
-        <FormGroup className="mb-3">
-          <Label>Area</Label>
-          <Select
-            value={selectedArea}
-            options={areas}
-            className="basic-select"
-            classNamePrefix="select"
-            onChange={handleFilterChange('area')}
-            placeholder="Select Area..."
-            isClearable
-          />
-        </FormGroup>
-
-        <FormGroup className="mb-3">
-          <Label>Distributor</Label>
-          <Select
-            value={selectedDistributor}
-            options={distributors}
-            className="basic-select"
-            classNamePrefix="select"
-            onChange={handleFilterChange('distributor')}
-            placeholder="Select Distributor..."
-            isClearable
-          />
-        </FormGroup>
-
-        <FormGroup className="mb-3">
-          <Label>Rank</Label>
-          <Select
-            value={selectedRank}
-            options={ranks}
-            className="basic-select"
-            classNamePrefix="select"
-            onChange={handleFilterChange('rank')}
-            placeholder="Select Rank..."
-            isClearable
-          />
-        </FormGroup>
+      <div className="row mb-3">
+        <div className="col-12">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="filter-group me-2">
+              <Label>Region</Label>
+              <Select
+                isMulti
+                value={selectedRegions}
+                options={regions}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                onChange={handleFilterChange('region')}
+                placeholder="Select Region..."
+              />
+            </div>
+            <div className="filter-group me-2">
+              <Label>Area</Label>
+              <Select
+                isMulti
+                value={selectedAreas}
+                options={areas}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                onChange={handleFilterChange('area')}
+                placeholder="Select Area..."
+              />
+            </div>
+            <div className="filter-group me-2">
+              <Label>Territory</Label>
+              <Select
+                isMulti
+                value={selectedTerritories}
+                options={territories}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                onChange={handleFilterChange('territory')}
+                placeholder="Select Territory..."
+              />
+            </div>
+            <div className="filter-group">
+              <Label>Distributor</Label>
+              <Select
+                isMulti
+                value={selectedDistributors}
+                options={distributors}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                onChange={handleFilterChange('distributor')}
+                placeholder="Select Distributor..."
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="map-container">
-        <Map
-          {...viewport}
-          onMove={evt => setViewport(evt.viewState)}
-          style={{ width: '100%', height: '100%' }}
-          mapStyle={MAPBOX_CONFIG.mapStyle}
-          mapboxAccessToken={MAPBOX_CONFIG.accessToken}
-          maxZoom={MAPBOX_CONFIG.maxZoom}
-          minZoom={MAPBOX_CONFIG.minZoom}
-          maxBounds={[
-            [MAPBOX_CONFIG.bounds.west, MAPBOX_CONFIG.bounds.south],
-            [MAPBOX_CONFIG.bounds.east, MAPBOX_CONFIG.bounds.north]
-          ]}
-        >
-          <MapboxClusterLayer
-            stores={filteredStores}
-            onClick={handleClusterClick}
-          />
-          {popupInfo && (
-            <Popup
-              anchor="top"
-              latitude={popupInfo.latitude}
-              longitude={popupInfo.longitude}
-              onClose={() => setPopupInfo(null)}
-              className="store-popup"
-              closeOnClick={false}
+
+      <div className="row mb-3">
+        <div className="col-12 d-flex justify-content-between align-items-center">
+          <div>
+            <FormGroup check inline>
+              <Input
+                type="radio"
+                name="filterType"
+                checked={selectedFilterType === 'region'}
+                onChange={() => handleFilterTypeChange('region')}
+              />
+              <Label check>Region</Label>
+            </FormGroup>
+            <FormGroup check inline>
+              <Input
+                type="radio"
+                name="filterType"
+                checked={selectedFilterType === 'area'}
+                onChange={() => handleFilterTypeChange('area')}
+              />
+             COS <Label check>Area</Label>
+            </FormGroup>
+            <FormGroup check inline>
+              <Input
+                type="radio"
+                name="filterType"
+                checked={selectedFilterType === 'territory'}
+                onChange={() => handleFilterTypeChange('territory')}
+              />
+              <Label check>Territory</Label>
+            </FormGroup>
+            <FormGroup check inline>
+              <Input
+                type="radio"
+                name="filterType"
+                checked={selectedFilterType === 'distributor'}
+                onChange={() => handleFilterTypeChange('distributor')}
+              />
+              <Label check>Distributor</Label>
+            </FormGroup>
+            <Button color="primary" onClick={handleResetFilters} className="ms-2">
+              Reset
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <div className="d-flex align-items-center">
+          <Button 
+            color="primary" 
+            outline={!showStores} // Outline when inactive
+            className="me-2" 
+            size="sm" 
+            onClick={() => setShowStores(true)}
+          >
+            SavTrach Shops
+          </Button>
+          <Button color="primary" outline size="sm">CBL Shops</Button>
+        </div>
+        <div className="col-12 d-flex justify-content-end">
+          <Button color="primary" onClick={handleLoadCMD} className="me-2">
+            Unselect All Areas
+          </Button>
+          <Button color="primary" onClick={handleResetAll}>
+             Reset All Sliders
+          </Button>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-8">
+          <div className="map-container">
+            <Map
+              {...viewport}
+              onMove={evt => setViewport(evt.viewState)}
+              style={{ width: '100%', height: '100vh' }}
+              mapStyle={MAPBOX_CONFIG.mapStyle}
+              mapboxAccessToken={MAPBOX_CONFIG.accessToken}
+              maxZoom={MAPBOX_CONFIG.maxZoom}
             >
-              <div className="store-popup-content p-3">
-                <h3 className="store-title mb-3">Store #{popupInfo.id}</h3>
-                <div className="store-details">
-                  <p className="mb-2"><strong>Type:</strong> <span className={`badge bg-${popupInfo.type === 'ACQUIRED' ? 'primary' : 'danger'} ms-2`}>{popupInfo.type}</span></p>
-                  <p className="mb-2"><strong>Region:</strong> <span className="ms-2">{popupInfo.region}</span></p>
-                  <p className="mb-2"><strong>City:</strong> <span className="ms-2">{popupInfo.city}</span></p>
-                  <p className="mb-2"><strong>Area:</strong> <span className="ms-2">{popupInfo.area || 'N/A'}</span></p>
-                  <p className="mb-2"><strong>Distributor:</strong> <span className="ms-2">{popupInfo.distributor || 'N/A'}</span></p>
-                  <p className="mb-2"><strong>Rank:</strong> <span className="ms-2">{popupInfo.rank || 'N/A'}</span></p>
-                  <p className="mb-0"><strong>Coordinates:</strong> <span className="ms-2">{popupInfo.latitude.toFixed(6)}, {popupInfo.longitude.toFixed(6)}</span></p>
-                </div>
-              </div>
-            </Popup>
-          )}
-        </Map>
+              <Source id="pakistan-provinces" type="geojson" data={pakistanGeoJSON}>
+                <Layer {...provinceLayerStyle} />
+                <Layer {...provinceOutlineStyle} />
+                {selectedFilterType === 'region' && <Layer {...highlightedRegionStyle} />}
+              </Source>
+
+              <MapboxClusterLayer
+                stores={filteredStores}
+                onClick={handleClusterClick}
+              />
+            </Map>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -11,9 +11,9 @@ import {
 } from "../../store/actions";
 
 // Other Layout related Component
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import Header from "./Header";
-import Footer from "./Footer";
+// import Footer from "./Footer";
 import Rightbar from "../CommonForBoth/Rightbar";
 import withRouter from "../Common/withRouter";
 
@@ -104,10 +104,10 @@ class Layout extends Component {
             toggleRightSidebar={this.toggleRightSidebar}
             openLeftMenuCallBack={this.openMenu}
           />
-          <Navbar menuOpen={this.state.isMenuOpened} />
+          {/* <Navbar menuOpen={this.state.isMenuOpened} /> */}
           <div className="main-content">
             {this.props.children}
-            <Footer />
+            {/* <Footer /> */}
           </div>
         </div>
         <Rightbar />

@@ -1,59 +1,28 @@
 .store-map-container {
-  display: grid;
-  grid-template-columns: 300px 1fr; /* Adjust the width of the filter panel as needed */
-  height: 100vh; /* Full viewport height */
-  width: 100%;
+  height: 100vh;
+  padding: 1rem;
+}
+
+.filter-group {
+  flex: 1;
 }
 
 .map-container {
+  height: 70vh;
   position: relative;
 }
 
-.filters-container {
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-right: 1px solid #ddd;
-  overflow-y: auto;
-}
-
-.mapboxgl-popup {
-  transition: opacity 0.3s ease-in-out;
-}
-
-.mapboxgl-popup-content {
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  border: 1px solid rgba(0,0,0,0.1);
-  background: rgba(255,255,255,0.98);
-  backdrop-filter: blur(5px);
-  max-width: 300px;
-}
-
-.mapboxgl-popup-content h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-
-.mapboxgl-popup-content p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #666;
-}
-
-.mapboxgl-popup-tip {
-  border-top-color: rgba(255,255,255,0.98);
-}
-
-.custom-cluster-icon {
+.store-popup-content {
   background: #fff;
-  border-radius: 50%;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.store-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.store-details p {
+  margin-bottom: 0.5rem;
 }

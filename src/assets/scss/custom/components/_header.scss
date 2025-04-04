@@ -1,0 +1,22 @@
+.navbar-nav .nav-item .nav-link {
+  padding: 0.75rem 1.25rem;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: var(--bs-primary);
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 4px;
+  }
+
+  &.active {
+    color: var(--bs-primary);
+    background-color: rgba(var(--bs-primary-rgb), 0.15);
+    border-radius: 4px;
+  }
+
+  i {
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+}

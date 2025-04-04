@@ -53,12 +53,12 @@ const MapsVector = () => {
       <div className="page-content">
 
           {/* <Breadcrumbs breadcrumbItems={breadcrumbItems} /> */}
-          <Row>
-            <Col lg={12}>
-              <div className="map-container" style={{ background: '#fff', borderRadius: '0.25rem', padding: '1.25rem', boxShadow: '0 0.75rem 1.5rem rgba(18,38,63,.03)' }}>
-                <div id="usa-vectormap" style={{ height: '89vh' }}>
+          {/* <Row>
+            <Col lg={12}> */}
+              <div className="map-container" style={{ height: '90vh' }}>
+                <div id="usa-vectormap" style={{ height: '90vh' }}>
                   {loading ? (
-                    <div className="text-center p-4 d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+                    <div className="text-center p-4 d-flex align-items-center justify-content-center" style={{ height: '90vh' }}>
                       <div>
                         <i className="mdi mdi-loading mdi-spin text-primary" style={{ fontSize: '3rem' }}></i>
                         <h5 className="mt-2">Loading stores...</h5>
@@ -69,8 +69,8 @@ const MapsVector = () => {
                   )}
                 </div>
               </div>
-            </Col>
-          </Row>
+            {/* </Col>
+          </Row> */}
 
       </div>
     </React.Fragment>

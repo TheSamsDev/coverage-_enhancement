@@ -2,13 +2,13 @@
 export const MAPBOX_CONFIG = {
   accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
   defaultCenter: {
-    lat: 30.3753, // Pakistan center
-    lng: 69.3451, // Pakistan center
+    lat: 21.3753, // Pakistan center
+    lng: 68.3451, // Pakistan center
   },
-  defaultZoom: 5,
+  defaultZoom: 4,
   maxZoom: 16,
   minZoom: 5,
-  mapStyle: 'mapbox://styles/mapbox/streets-v12',
+  mapStyle: 'mapbox://styles/mapbox/light-v10',
   clusterOptions: {
     maxZoom: 14,
     radius: 50

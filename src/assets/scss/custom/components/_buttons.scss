@@ -1,46 +1,44 @@
 // _buttons.scss
 
-button,
-a {
-  outline: none !important;
-}
+// button,
+// a {
+//   outline: none !important;
+// }
 
 .btn {
   position: relative;
   border: none;
   border-radius: $btn-border-radius;
-  transition: $cosmic-transition;
-  box-shadow: 0 4px 15px $logo-shadow;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  color: $white !important;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
+    left: -100%;
     width: 100%;
     height: 100%;
-    background: $logo-gradient;
-    opacity: 0.1;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
     pointer-events: none;
-    z-index: 0;
-    transition: opacity 0.3s ease;
   }
 
-  &:hover,
-  &:active,
-  &:focus,
-  &.active,
-  &.show {
-    border-color: transparent !important;
-    box-shadow: 0 8px 25px $logo-hover-shadow;
-    transform: translateY(-2px);
-    background: $logo-gradient;
-    color: $white !important;
-
+  &:hover {
     &::before {
-      opacity: 0.3;
+      left: 100%;
     }
+  }
+
+  &:active,
+  &.active {
+    opacity: 0.9;
+    color: $white !important;
   }
 }
 
@@ -71,31 +69,40 @@ a {
   border-radius: 30px;
 }
 
-.btn-dark,
-.btn-secondary {
-  background: $logo-primary-color;
-  color: $white;
-  box-shadow: 0 4px 15px $logo-shadow;
+.btn-outline-light,
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning,
+.btn-outline-danger,
+.btn-outline-dark {
+  background: transparent !important;
+  border-width: 1px;
+  border-style: solid;
+  color: var(--#{$prefix}btn-color) !important;
 
   &:hover,
   &:focus,
-  &:active {
-    background: $logo-gradient;
-    box-shadow: 0 8px 25px $logo-hover-shadow;
-  }
-}
-
-.btn-outline-light {
-  color: $logo-primary-color !important;
-  border-color: rgba($logo-primary-color, 0.3);
-
-  &:hover {
-    background: $logo-gradient;
+  &:active,
+  &.active {
     color: $white !important;
+    background: $logo-gradient !important;
     border-color: transparent;
   }
 }
 
+.btn-dark,
+.btn-secondary {
+  background: $logo-primary-color;
+  color: $white;
+  transition: background 0.3s ease;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: $logo-gradient !important;
+  }
+}
 // Dark theme adjustments
 [data-bs-theme="dark"] {
   .btn-light {
@@ -107,7 +114,7 @@ a {
       color: $white !important;
       background: $logo-gradient-dark;
       border-color: transparent;
-      box-shadow: 0 6px 20px $logo-hover-shadow-dark;
+      transition: background 0.3s ease;
     }
   }
 
@@ -119,7 +126,7 @@ a {
   .btn-soft-light:focus {
     color: $white !important;
     background: $logo-gradient-dark;
-    box-shadow: 0 6px 20px $logo-hover-shadow-dark;
+    transition: background 0.3s ease;
   }
 
   .btn-check:active + .btn-light,
@@ -139,7 +146,7 @@ a {
   .show > .btn-soft-light.dropdown-toggle {
     color: $white !important;
     background: $logo-gradient-dark;
-    box-shadow: 0 6px 20px $logo-hover-shadow-dark;
+    transition: background 0.3s ease;
   }
 
   .btn-dark {
@@ -147,10 +154,26 @@ a {
     background: $logo-primary-color-dark;
     border-color: transparent;
     box-shadow: 0 4px 15px $logo-shadow-dark;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
 
     &:hover {
       background: $logo-gradient-dark;
-      box-shadow: 0 8px 25px $logo-hover-shadow-dark;
+      transition: background 0.3s ease;
+      &::before {
+        left: 100%;
+      }
     }
   }
 
@@ -162,7 +185,7 @@ a {
   .btn-soft-dark:focus {
     color: $white;
     background: $logo-gradient-dark;
-    box-shadow: 0 8px 25px $logo-hover-shadow-dark;
+    transition: background 0.3s ease;
   }
 
   .btn-check:active + .btn-dark,
@@ -182,7 +205,7 @@ a {
   .show > .btn-soft-dark.dropdown-toggle {
     color: $white;
     background: $logo-gradient-dark;
-    box-shadow: 0 8px 25px $logo-hover-shadow-dark;
+    transition: background 0.3s ease;
   }
 
   .btn-outline-light {

@@ -76,7 +76,7 @@ const unclusteredPointLayer = {
   }
 };
 
-const MapboxClusterLayer = ({ stores, onClick }) => {
+const MapboxClusterLayer = ({ stores }) => {
   const handleMouseEnter = (event) => {
     const feature = event.features[0];
     if (!feature.properties.cluster) {
@@ -85,7 +85,6 @@ const MapboxClusterLayer = ({ stores, onClick }) => {
         { source: 'stores', id: feature.id },
         { hover: true }
       );
-      onClick(event);
     }
   };
 
@@ -97,7 +96,6 @@ const MapboxClusterLayer = ({ stores, onClick }) => {
         { hover: false }
       );
     }
-
   };
 
   const points = useMemo(
