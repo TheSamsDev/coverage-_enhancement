@@ -4,16 +4,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxClusterLayer from "./MapboxClusterLayer";
 import Select from "react-select";
 import { FormGroup, Label, Button, ButtonGroup, Input } from "reactstrap";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography,Accordion,AccordionDetails ,AccordionSummary} from "@mui/material";
 
 import { MAPBOX_CONFIG } from "../../config/mapConfig";
 import "./styles/MapboxStoreMap.css";
 import pakistanGeoJSON from "../../assets/pk.json";
 import * as turf from "@turf/turf";
-// Import Material-UI components
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 const ExpandMoreIcon = () => "▼";
 
 const MapboxStoreMap = ({ stores: propStores }) => {
@@ -46,7 +42,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
 
   const territories = useMemo(() => {
     const uniqueTerritories = [
-      ...new Set(stores.map((store) => store.territory)),
+      ...new Set(stores.map((store) => store.rank)),
     ];
     return uniqueTerritories.map((territory) => ({
       value: territory,
@@ -541,68 +537,61 @@ const MapboxStoreMap = ({ stores: propStores }) => {
           <div style={{ marginTop: "20px" }}>
             {/* First Accordion: Stats */}
             <Accordion defaultExpanded>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{
-                  background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
-                  color: "white",
-                }}
-              >
-                <Typography sx={{ color: "white", fontWeight: "bold" }}>
-                  Stats
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {[
-                  { label: "No of Outlets", value: stores.length },
-                  { label: "Selected Outlets", value: filteredStores.length }, // Dynamically set the count of selected stores
-                  { label: "CBL Shops", value: 0 },
-                  { label: "CBL Shops Selected", value: 0 },
-                  { label: "Region Selected", value: selectedRegions.length },
-                  { label: "Area Selected", value: selectedAreas.length },
-                ].map((item, index) => (
-                  <Box key={index} sx={{ mb: 1 }}>
-                    {" "}
-                    {/* Wrap in a Box for layout consistency */}
-                    <Typography
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        borderBottom: "1px solid #ddd", // Light gray border
-                        padding: "8px 0",
-                      }}
-                    >
-                      <span>{item.label}</span>
-                      <span>{item.value.toLocaleString()}</span>
-                    </Typography>
-                    {/* Buttons will only appear below the first row (No of Outlets) */}
-                    {index === 5 && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          mt: 2,
-                        }}
-                      >
-                        <ButtonGroup variant="contained">
-                          <Button color="primary" outline size="sm">
-                            Show Stats
-                          </Button>
-                          <Button color="primary" outline size="sm">
-                            Census Outlets
-                          </Button>
-                          <Button color="primary" outline size="sm">
-                            Routes Data
-                          </Button>
-                        </ButtonGroup>
-                      </Box>
-                    )}
-                  </Box>
-                ))}
-              </AccordionDetails>
-            </Accordion>
+  <AccordionSummary
+    expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+    aria-controls="panel1a-content"
+    id="panel1a-header"
+    sx={{
+      background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+      color: "white",
+    }}
+  >
+    <Typography sx={{ color: "white", fontWeight: "bold" }}>
+      Stats
+    </Typography>
+  </AccordionSummary>
+  <AccordionDetails>
+    {[
+      { label: "No of Outlets", value: stores.length },
+      { label: "Selected Outlets", value: filteredStores.length }, // Dynamically show selected stores count
+      { label: "CBL Shops", value: 0 },
+      { label: "CBL Shops Selected", value: 0 },
+      { label: "Region Selected", value: selectedRegions.length },
+      { label: "Area Selected", value: selectedAreas.length },
+    ].map((item, index) => (
+      <Box key={index} sx={{ mb: 1 }}>
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            borderBottom: "1px solid #ddd",
+            padding: "8px 0",
+          }}
+        >
+          <span>{item.label}</span>
+          <span>{item.value.toLocaleString()}</span>
+        </Typography>
+        {/* Show buttons only below the first row */}
+        {index === 5 && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <ButtonGroup variant="contained">
+              <Button color="primary" outline size="sm">
+                Show Stats
+              </Button>
+              <Button color="primary" outline size="sm">
+              CBL Outlets
+              </Button>
+              <Button color="primary" outline size="sm">
+                Routes Data
+              </Button>
+            </ButtonGroup>
+          </Box>
+        )}
+      </Box>
+    ))}
+  </AccordionDetails>
+</Accordion>
+
 
             {/* Second Accordion: Filters */}
             <Accordion>

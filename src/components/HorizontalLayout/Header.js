@@ -142,16 +142,16 @@ class Header extends Component {
                         {this.props.t("Coverage Enhancement")}
                       </Link>
                     </li>
-                    <li className="nav-item">
-                      <Link to="/sales-analytics" className={`nav-link ${this.isActive("/sales-analytics")}`}>
+                    <li className="nav-item ck-disabled">
+                      <Link to="/" className={`nav-link ${this.isActive("/sales-analytics")}`}>
                         <i className="ri-bar-chart-2-line me-2"></i>
-                        {this.props.t("Sales Analytics")}
+                        {this.props.t("Coming Soon")}
                       </Link>
                     </li>
-                    <li className="nav-item">
-                      <Link to="/stores" className={`nav-link ${this.isActive("/stores")}`}>
+                    <li className="nav-item ck-disabled">
+                      <Link to="/" className={`nav-link ${this.isActive("/stores")}`}>
                         <i className="ri-store-2-line me-2"></i>
-                        {this.props.t("Stores")}
+                        {this.props.t("Coming Soon")}
                       </Link>
                     </li>
                   </ul>
