@@ -118,7 +118,6 @@ class Header extends Component {
                 </Link>
               </div>
             </div>
-
             <div>
             <nav
                 className="navbar navbar-light navbar-expand-lg topnav-menu"

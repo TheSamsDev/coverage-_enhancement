@@ -3,13 +3,19 @@ import { Map, Source, Layer } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxClusterLayer from "./MapboxClusterLayer";
 import Select from "react-select";
-import { FormGroup, Label, Button, ButtonGroup, Input } from "reactstrap";
-import { Box, Typography,Accordion,AccordionDetails ,AccordionSummary} from "@mui/material";
-
+import { FormGroup, Label, Button, ButtonGroup, Input, Card, CardBody, Row, Col } from "reactstrap";
+import {
+  Box,
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+} from "@mui/material";
+import Icon from '@mdi/react';
+import { mdiRefresh } from '@mdi/js';
 import { MAPBOX_CONFIG } from "../../config/mapConfig";
 import "./styles/MapboxStoreMap.css";
 import pakistanGeoJSON from "../../assets/pk.json";
-import * as turf from "@turf/turf";
 const ExpandMoreIcon = () => "▼";
 
 const MapboxStoreMap = ({ stores: propStores }) => {
@@ -17,6 +23,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   const [showStores, setShowStores] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
   const [selectedAreas, setSelectedAreas] = useState([]);
   const [selectedTerritories, setSelectedTerritories] = useState([]);
   const [selectedDistributors, setSelectedDistributors] = useState([]);
@@ -28,11 +35,15 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     bearing: 0,
     pitch: 0,
   });
-  const [dynamicPolygons, setDynamicPolygons] = useState(null);
 
   const regions = useMemo(() => {
     const uniqueRegions = [...new Set(stores.map((store) => store.region))];
     return uniqueRegions.map((region) => ({ value: region, label: region }));
+  }, [stores]);
+
+  const cities = useMemo(() => {
+    const uniqueCitiess = [...new Set(stores.map((store) => store.city))];
+    return uniqueCitiess.map((city) => ({ value: city, label: city }));
   }, [stores]);
 
   const areas = useMemo(() => {
@@ -41,9 +52,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   }, [stores]);
 
   const territories = useMemo(() => {
-    const uniqueTerritories = [
-      ...new Set(stores.map((store) => store.rank)),
-    ];
+    const uniqueTerritories = [...new Set(stores.map((store) => store.territory))];
     return uniqueTerritories.map((territory) => ({
       value: territory,
       label: territory,
@@ -68,6 +77,9 @@ const MapboxStoreMap = ({ stores: propStores }) => {
       const regionMatch =
         !selectedRegions.length ||
         selectedRegions.some((region) => region.value === store.region);
+      const citynMatch =
+        !selectedCities.length ||
+        selectedCities.some((region) => region.value === store.city);
       const areaMatch =
         !selectedAreas.length ||
         selectedAreas.some((area) => area.value === store.area);
@@ -81,11 +93,12 @@ const MapboxStoreMap = ({ stores: propStores }) => {
         selectedDistributors.some(
           (distributor) => distributor.value === store.distributor
         );
-      return regionMatch && areaMatch && territoryMatch && distributorMatch;
+      return regionMatch && citynMatch && areaMatch && territoryMatch && distributorMatch;
     });
   }, [
     stores,
     selectedRegions,
+    selectedCities,
     selectedAreas,
     selectedTerritories,
     selectedDistributors,
@@ -102,113 +115,39 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     return () => clearTimeout(timer);
   }, [propStores]);
 
-  useEffect(() => {
-    if (!areas || !territories || !distributors) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!areas || !territories || !distributors) {
+  //     return;
+  //   }
 
-    if (
-      !selectedAreas.length &&
-      !selectedTerritories.length &&
-      !selectedDistributors.length &&
-      !selectedFilterType
-    ) {
-      setDynamicPolygons(null);
-      return;
-    }
+  //   let filtered = stores.filter((store) => {
+  //     const areaMatch =
+  //       !selectedAreas.length ||
+  //       selectedAreas.some((area) => area.value === store.area);
+  //     const territoryMatch =
+  //       !selectedTerritories.length ||
+  //       selectedTerritories.some(
+  //         (territory) => territory.value === store.territory
+  //       );
+  //     const distributorMatch =
+  //       !selectedDistributors.length ||
+  //       selectedDistributors.some(
+  //         (distributor) => distributor.value === store.distributor
+  //       );
+  //     return areaMatch && territoryMatch && distributorMatch;
+  //   });
 
-    let entitiesToProcess = [];
-    if (selectedFilterType === "area") {
-      entitiesToProcess = selectedAreas.length ? selectedAreas : areas;
-    } else if (selectedFilterType === "territory") {
-      entitiesToProcess = selectedTerritories.length
-        ? selectedTerritories
-        : territories;
-    } else if (selectedFilterType === "distributor") {
-      entitiesToProcess = selectedDistributors.length
-        ? selectedDistributors
-        : distributors;
-    } else {
-      entitiesToProcess = [];
-      if (selectedAreas.length) entitiesToProcess = selectedAreas;
-      else if (selectedTerritories.length)
-        entitiesToProcess = selectedTerritories;
-      else if (selectedDistributors.length)
-        entitiesToProcess = selectedDistributors;
-    }
-
-    if (entitiesToProcess.length === 0) {
-      setDynamicPolygons(null);
-      return;
-    }
-
-    let filtered = stores.filter((store) => {
-      const areaMatch =
-        !selectedAreas.length ||
-        selectedAreas.some((area) => area.value === store.area);
-      const territoryMatch =
-        !selectedTerritories.length ||
-        selectedTerritories.some(
-          (territory) => territory.value === store.territory
-        );
-      const distributorMatch =
-        !selectedDistributors.length ||
-        selectedDistributors.some(
-          (distributor) => distributor.value === store.distributor
-        );
-      return areaMatch && territoryMatch && distributorMatch;
-    });
-
-    if (selectedRegions.length) {
-      filtered = filtered.filter((store) =>
-        selectedRegions.some((region) => region.value === store.region)
-      );
-    }
-
-    const storesByRegion = filtered.reduce((acc, store) => {
-      const region = store.region;
-      if (!acc[region]) acc[region] = [];
-      acc[region].push(store);
-      return acc;
-    }, {});
-
-    const polygons = [];
-    Object.keys(storesByRegion).forEach((region) => {
-      const regionStores = storesByRegion[region];
-      const points = regionStores
-        .filter((store) => store.latitude && store.longitude)
-        .map((store) => turf.point([store.longitude, store.latitude]));
-
-      if (points.length >= 3) {
-        const pointCollection = turf.featureCollection(points);
-        const hull = turf.convex(pointCollection);
-        if (hull) {
-          hull.properties = { region };
-          polygons.push(hull);
-        }
-      }
-    });
-
-    if (polygons.length > 0) {
-      setDynamicPolygons(turf.featureCollection(polygons));
-    } else {
-      setDynamicPolygons(null);
-    }
-  }, [
-    selectedAreas,
-    selectedTerritories,
-    selectedDistributors,
-    selectedFilterType,
-    selectedRegions,
-    stores,
-    areas,
-    territories,
-    distributors,
-  ]);
+  //   if (selectedRegions.length) {
+  //     filtered = filtered.filter((store) =>
+  //       selectedRegions.some((region) => region.value === store.region)
+  //     );
+  //   }
+  // });
 
   const handleFilterTypeChange = (filterType) => {
     setSelectedFilterType(filterType);
     setSelectedRegions([]);
+    setSelectedCities([]);
     setSelectedAreas([]);
     setSelectedTerritories([]);
     setSelectedDistributors([]);
@@ -219,6 +158,9 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     switch (filterType) {
       case "region":
         setSelectedRegions(options);
+        break;
+      case "city":
+        setSelectedCities(options);
         break;
       case "area":
         setSelectedAreas(options);
@@ -241,7 +183,6 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     setSelectedDistributors([]);
     setSelectedFilterType(null);
     setShowStores(false);
-    setDynamicPolygons(null);
     setViewport({
       latitude: MAPBOX_CONFIG.defaultCenter.lat,
       longitude: MAPBOX_CONFIG.defaultCenter.lng,
@@ -254,11 +195,11 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   const handleResetFilters = () => {
     setSelectedFilterType(null);
     setSelectedRegions([]);
+    setSelectedCities([]);
     setSelectedAreas([]);
     setSelectedTerritories([]);
     setSelectedDistributors([]);
     setShowStores(false);
-    setDynamicPolygons(null);
     setViewport({
       latitude: MAPBOX_CONFIG.defaultCenter.lat,
       longitude: MAPBOX_CONFIG.defaultCenter.lng,
@@ -337,16 +278,6 @@ const MapboxStoreMap = ({ stores: propStores }) => {
       : ["in", "name", ""],
   };
 
-  const dynamicPolygonStyle = {
-    id: "dynamic-polygon",
-    type: "fill",
-    source: "dynamic-polygons",
-    paint: {
-      "fill-color": "#8B0000",
-      "fill-opacity": 0.6,
-    },
-  };
-
   if (isLoading) {
     return (
       <div
@@ -367,7 +298,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   return (
     <div className="store-map-container">
       <div className="row mb-3">
-        <div className="col-12">
+        <div className="col-9">
           <div className="d-flex justify-content-between align-items-center">
             <div className="filter-group me-2">
               <Label>Region</Label>
@@ -378,6 +309,18 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 className="basic-multi-select"
                 classNamePrefix="select"
                 onChange={handleFilterChange("region")}
+                placeholder="Select Region..."
+              />
+            </div>
+            <div className="filter-group me-2">
+              <Label>City</Label>
+              <Select
+                isMulti
+                value={selectedCities}
+                options={cities}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                onChange={handleFilterChange("city")}
                 placeholder="Select Region..."
               />
             </div>
@@ -418,12 +361,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <div className="col-12 d-flex justify-content-between align-items-center">
-          <div>
+          <div className="mt-3">
             <FormGroup check inline>
               <Input
                 type="radio"
@@ -432,6 +370,15 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 onChange={() => handleFilterTypeChange("region")}
               />
               <Label check>Region</Label>
+            </FormGroup>
+            <FormGroup check inline>
+              <Input
+                type="radio"
+                name="filterType"
+                checked={selectedFilterType === "city"}
+                onChange={() => handleFilterTypeChange("city")}
+              />
+              <Label check>City</Label>
             </FormGroup>
             <FormGroup check inline>
               <Input
@@ -468,37 +415,29 @@ const MapboxStoreMap = ({ stores: propStores }) => {
               Reset
             </Button>
           </div>
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <div className="d-flex align-items-center">
-          <Button
-            color="primary"
-            outline={!showStores}
-            className="me-2"
-            size="sm"
-            onClick={() => setShowStores(true)}
-          >
-            SavTrach Shops
-          </Button>
-          <Button color="primary" outline size="sm">
-            CBL Shops
-          </Button>
-        </div>
-        <div className="col-12 d-flex justify-content-end">
-          <Button color="primary" onClick={handleLoadCMD} className="me-2">
-            Unselect All Areas
-          </Button>
-          <Button color="primary" onClick={handleResetAll}>
-            Reset All Sliders
-          </Button>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-8">
-          <div className="map-container">
+          <div className="d-flex align-items-center mt-3">
+            <Button
+              color="primary"
+              outline={!showStores}
+              className="me-2"
+              size="sm"
+              onClick={() => setShowStores(true)}
+            >
+              SavTrach Shops
+            </Button>
+            <Button color="primary" outline size="sm">
+              CBL Shops
+            </Button>
+          </div>
+          {/* <div className="d-flex align-items-center mt-3">
+            <Button color="primary" onClick={handleLoadCMD} className="me-2">
+              Unselect All Areas
+            </Button>
+            <Button color="primary" onClick={handleResetAll}>
+              Reset All Sliders
+            </Button>
+          </div> */}
+          <div className="map-container mt-3">
             <Map
               {...viewport}
               onMove={(evt) => setViewport(evt.viewState)}
@@ -517,103 +456,180 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 <Layer {...allRegionsHighlightStyle} />
                 <Layer {...highlightedRegionStyle} />
               </Source>
-
-              {dynamicPolygons && (
-                <Source
-                  id="dynamic-polygons"
-                  type="geojson"
-                  data={dynamicPolygons}
-                >
-                  <Layer {...dynamicPolygonStyle} />
-                </Source>
-              )}
-
               <MapboxClusterLayer stores={filteredStores} />
             </Map>
           </div>
         </div>
-
-        <div className="col-4">
+        <div className="col-3" style={{borderRadius: "10px" }}>
           <div style={{ marginTop: "20px" }}>
-            {/* First Accordion: Stats */}
-            <Accordion defaultExpanded>
-  <AccordionSummary
-    expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
-    aria-controls="panel1a-content"
-    id="panel1a-header"
-    sx={{
-      background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
-      color: "white",
-    }}
-  >
-    <Typography sx={{ color: "white", fontWeight: "bold" }}>
-      Stats
-    </Typography>
-  </AccordionSummary>
-  <AccordionDetails>
-    {[
-      { label: "No of Outlets", value: stores.length },
-      { label: "Selected Outlets", value: filteredStores.length }, // Dynamically show selected stores count
-      { label: "CBL Shops", value: 0 },
-      { label: "CBL Shops Selected", value: 0 },
-      { label: "Region Selected", value: selectedRegions.length },
-      { label: "Area Selected", value: selectedAreas.length },
-    ].map((item, index) => (
-      <Box key={index} sx={{ mb: 1 }}>
-        <Typography
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            borderBottom: "1px solid #ddd",
-            padding: "8px 0",
-          }}
-        >
-          <span>{item.label}</span>
-          <span>{item.value.toLocaleString()}</span>
-        </Typography>
-        {/* Show buttons only below the first row */}
-        {index === 5 && (
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-            <ButtonGroup variant="contained">
-              <Button color="primary" outline size="sm">
-                Show Stats
-              </Button>
-              <Button color="primary" outline size="sm">
-              CBL Outlets
-              </Button>
-              <Button color="primary" outline size="sm">
-                Routes Data
-              </Button>
-            </ButtonGroup>
-          </Box>
-        )}
-      </Box>
-    ))}
-  </AccordionDetails>
-</Accordion>
+            {/* Stats Cards */}
+            <div className="stats-cards-container">
+              <Row>
+                <Col sm={6} className="mb-4">
+                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, #8b5cf6, #3b82f6)", borderRadius: "15px" }}>
+                    <CardBody className="d-flex align-items-center">
+                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
+                        <i className="mdi mdi-store text-white" style={{ fontSize: "25px" }}></i>
+                      </div>
+                      <div className="stats-info text-white">
+                        <h4 className="mb-1 text-white">{stores.length}</h4>
+                        <p className="mb-0">Outlets</p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col sm={6} className="mb-4">
+                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, rgb(191 54 246), rgb(195 53 247)", borderRadius: "15px" }}>
+                    <CardBody className="d-flex align-items-center">
+                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
+                        <i className="mdi mdi-check-circle text-white" style={{ fontSize: "25px" }}></i>
+                      </div>
+                      <div className="stats-info text-white">
+                        <h4 className="mb-1 text-white">{filteredStores.length}</h4>
+                        <p className="mb-0">Outlets</p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col sm={6} className="mb-4">
+                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, rgb(127 35 173), rgb(120 34 166))", borderRadius: "15px" }}>
+                    <CardBody className="d-flex align-items-center">
+                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
+                        <i className="mdi mdi-map-marker text-white" style={{ fontSize: "25px" }}></i>
+                      </div>
+                      <div className="stats-info text-white">
+                        <h4 className="mb-1 text-white">{selectedRegions.length}</h4>
+                        <p className="mb-0">Regions</p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col sm={6} className="mb-4">
+                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, #8b5cf6, #3b82f6)", borderRadius: "15px" }}>
+                    <CardBody className="d-flex align-items-center">
+                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
+                        <i className="mdi mdi-map text-white" style={{ fontSize: "25px" }}></i>
+                      </div>
+                      <div className="stats-info text-white">
+                        <h4 className="mb-1 text-white">{selectedAreas.length}</h4>
+                        <p className="mb-0">Areas</p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+              <div className="text-center mt-3">
+                <ButtonGroup>
+                  <Button color="primary" outline size="sm">
+                    <i className="mdi mdi-chart-bar me-1"></i> Show Stats
+                  </Button>
+                  <Button color="success" outline size="sm">
+                    <i className="mdi mdi-store me-1"></i> CBL Outlets
+                  </Button>
+                  <Button color="info" outline size="sm">
+                    <i className="mdi mdi-routes me-1"></i> Routes Data
+                  </Button>
+                  <Button color="primary" outline size="sm" onClick={handleResetAll}>
+                    <i className="mdi mdi-refresh me-1"></i> Reset Filter
+                  </Button>
+                </ButtonGroup>
+              </div>
+            </div>
 
+            {/* Filter Box with Three Accordions */}
+            <Card style={{ background: "#F9F9F9", borderRadius: "10px", marginTop: "20px", border: "none" }}>
+              <CardBody>
 
-            {/* Second Accordion: Filters */}
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{
-                  background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
-                  color: "white",
-                }}
-              >
-                <Typography sx={{ color: "white", fontWeight: "bold" }}>
+                 {/* <Button color="primary" outline size="sm" onClick={handleResetAll}>
+                    <i className="mdi mdi-refresh me-1"></i> Reset Filter
+                  </Button> */}
+
+                <Typography sx={{ color: "black", fontWeight: "lighter", marginBottom: "10px" }}>
                   Filters
                 </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {" "}
-                {/* Blue background for details */}
-                <Typography>Work In Progress</Typography>
-              </AccordionDetails>
-            </Accordion>
+
+                {/* Outlet Size Profile Accordion */}
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="outlet-size-content"
+                    id="outlet-size-header"
+                  >
+                    <Typography>Outlet Size Profile</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div style={{ padding: "8px" }}>
+                      {["Up to 50,000", "50,000 to 100,000", "100,001-250,000"].map((size, index) => (
+                        <FormGroup key={index} check className="mb-2">
+                          <Input
+                            type="checkbox"
+                            id={`size-${index}`}
+                            className="form-check-input"
+                          />
+                          <Label check className="form-check-label" htmlFor={`size-${index}`}>
+                            {size}
+                          </Label>
+                        </FormGroup>
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+
+                {/* Product Handling Accordion */}
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="product-handling-content"
+                    id="product-handling-header"
+                  >
+                    <Typography>Product Handling</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div style={{ padding: "8px" }}>
+                      {["Sandwich", "Coffee"].map((product, index) => (
+                        <FormGroup key={index} check className="mb-2">
+                          <Input
+                            type="checkbox"
+                            id={`product-${index}`}
+                            className="form-check-input"
+                          />
+                          <Label check className="form-check-label" htmlFor={`product-${index}`}>
+                            {product}
+                          </Label>
+                        </FormGroup>
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+
+                {/* Area Profile Accordion (Added as a third option) */}
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="area-profile-content"
+                    id="area-profile-header"
+                  >
+                    <Typography>Area Profile</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div style={{ padding: "8px" }}>
+                      {["High Income", "Middle Income", "Low Income", "Poor", "Very Poor"].map((income, index) => (
+                        <FormGroup key={index} check className="mb-2">
+                          <Input
+                            type="checkbox"
+                            id={`income-${index}`}
+                            className="form-check-input"
+                          />
+                          <Label check className="form-check-label" htmlFor={`income-${index}`}>
+                            {income}
+                          </Label>
+                        </FormGroup>
+                      ))}
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              </CardBody>
+            </Card>
           </div>
         </div>
       </div>

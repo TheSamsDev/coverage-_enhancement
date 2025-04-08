@@ -29,7 +29,8 @@ const MapsVector = () => {
           city: store.City,
           area: store.Area || "Unknown",
           distributor: store.channel || "Unknown",
-          rank: store.rank || "Unknown"
+          rank: store.rank || "Unknown",
+          territory: store.Territory || "Unknown"
         }));
      console.log(mappedStores);
         // Set the fetched data to the state variables
