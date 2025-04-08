@@ -27,7 +27,10 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   const [selectedAreas, setSelectedAreas] = useState([]);
   const [selectedTerritories, setSelectedTerritories] = useState([]);
   const [selectedDistributors, setSelectedDistributors] = useState([]);
+  const [selectedOutletTypes, setSelectedOutletTypes] = useState([]);
+  const [selectedAreaProfiles, setSelectedAreaProfiles] = useState([]);
   const [selectedFilterType, setSelectedFilterType] = useState(null);
+  const [outletSizeRange, setOutletSizeRange] = useState([0, 1000000]);
   const [viewport, setViewport] = useState({
     latitude: MAPBOX_CONFIG.defaultCenter.lat,
     longitude: MAPBOX_CONFIG.defaultCenter.lng,
@@ -69,6 +72,16 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     }));
   }, [stores]);
 
+  const outletTypes = useMemo(() => {
+    const uniqueOutletTypes = [...new Set(stores.map((store) => store.outlet_type))];
+    return uniqueOutletTypes.map((type) => ({ value: type, label: type }));
+  }, [stores]);
+
+  const areaProfiles = useMemo(() => {
+    const uniqueAreaProfiles = [...new Set(stores.map((store) => store.area_profile))];
+    return uniqueAreaProfiles.map((profile) => ({ value: profile, label: profile }));
+  }, [stores]);
+
   const filteredStores = useMemo(() => {
     if (!showStores) {
       return [];
@@ -93,7 +106,21 @@ const MapboxStoreMap = ({ stores: propStores }) => {
         selectedDistributors.some(
           (distributor) => distributor.value === store.distributor
         );
-      return regionMatch && citynMatch && areaMatch && territoryMatch && distributorMatch;
+      const outletTypeMatch =
+        !selectedOutletTypes.length ||
+        selectedOutletTypes.some(
+          (type) => type.value === store.outlet_type
+        );
+      const outletSizeMatch = 
+        store.outlet_size >= outletSizeRange[0] && 
+        store.outlet_size <= outletSizeRange[1];
+
+      const areaProfileMatch =
+        !selectedAreaProfiles.length ||
+        selectedAreaProfiles.some(
+          (profile) => profile.value === store.area_profile
+        );
+      return regionMatch && citynMatch && areaMatch && territoryMatch && distributorMatch && outletTypeMatch && areaProfileMatch && outletSizeMatch;
     });
   }, [
     stores,
@@ -102,6 +129,9 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     selectedAreas,
     selectedTerritories,
     selectedDistributors,
+    selectedOutletTypes,
+    selectedAreaProfiles,
+    outletSizeRange,
     showStores,
   ]);
 
@@ -177,19 +207,22 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   };
 
   const handleResetAll = () => {
-    setSelectedRegions([]);
-    setSelectedAreas([]);
-    setSelectedTerritories([]);
-    setSelectedDistributors([]);
-    setSelectedFilterType(null);
-    setShowStores(false);
-    setViewport({
-      latitude: MAPBOX_CONFIG.defaultCenter.lat,
-      longitude: MAPBOX_CONFIG.defaultCenter.lng,
-      zoom: MAPBOX_CONFIG.defaultZoom,
-      bearing: 0,
-      pitch: 0,
-    });
+    // setSelectedRegions([]);
+    // setSelectedAreas([]);
+    // setSelectedTerritories([]);
+    // setSelectedDistributors([]);
+    // setSelectedFilterType(null);
+    setOutletSizeRange([0, 1000000]);
+    setSelectedAreaProfiles([]);
+    setSelectedOutletTypes([]);
+    // setShowStores(false);
+    // setViewport({
+    //   latitude: MAPBOX_CONFIG.defaultCenter.lat,
+    //   longitude: MAPBOX_CONFIG.defaultCenter.lng,
+    //   zoom: MAPBOX_CONFIG.defaultZoom,
+    //   bearing: 0,
+    //   pitch: 0,
+    // });
   };
 
   const handleResetFilters = () => {
@@ -199,7 +232,8 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     setSelectedAreas([]);
     setSelectedTerritories([]);
     setSelectedDistributors([]);
-    setShowStores(false);
+    // setSelectedAreaProfiles([]);
+    // setShowStores(false);
     setViewport({
       latitude: MAPBOX_CONFIG.defaultCenter.lat,
       longitude: MAPBOX_CONFIG.defaultCenter.lng,
@@ -421,9 +455,10 @@ const MapboxStoreMap = ({ stores: propStores }) => {
               outline={!showStores}
               className="me-2"
               size="sm"
-              onClick={() => setShowStores(true)}
+              onClick={() => setShowStores(!showStores)}
+              style={{ borderColor: !showStores ? '#556ee6' : 'transparent' }}
             >
-              SavTrach Shops
+              SavTrack Shops
             </Button>
             <Button color="primary" outline size="sm">
               CBL Shops
@@ -537,7 +572,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
             </div>
 
             {/* Filter Box with Three Accordions */}
-            <Card style={{ background: "#F9F9F9", borderRadius: "10px", marginTop: "20px", border: "none" }}>
+            <Card style={{ background: "#F9F9F9", borderRadius: "10px", marginTop: "20px", border: "none" ,height:"50vh" , overflow:"auto" }}>
               <CardBody>
 
                  {/* <Button color="primary" outline size="sm" onClick={handleResetAll}>
@@ -559,42 +594,68 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <div style={{ padding: "8px" }}>
-                      {["Up to 50,000", "50,000 to 100,000", "100,001-250,000"].map((size, index) => (
-                        <FormGroup key={index} check className="mb-2">
-                          <Input
-                            type="checkbox"
-                            id={`size-${index}`}
-                            className="form-check-input"
+                      <div style={{ marginBottom: "10px" }}>
+                        <Typography variant="body2" gutterBottom>
+                          Range: {outletSizeRange[0].toLocaleString()} - {outletSizeRange[1].toLocaleString()}
+                        </Typography>
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="range"
+                            min="0"
+                            max="1000000"
+                            step="10000"
+                            value={outletSizeRange[0]}
+                            onChange={(e) => setOutletSizeRange([parseInt(e.target.value), Math.max(outletSizeRange[1], parseInt(e.target.value))])}
+                            className="form-range"
+                            style={{ width: "100%" }}
                           />
-                          <Label check className="form-check-label" htmlFor={`size-${index}`}>
-                            {size}
-                          </Label>
-                        </FormGroup>
-                      ))}
+                          <input
+                            type="range"
+                            min="0"
+                            max="1000000"
+                            step="10000"
+                            value={outletSizeRange[1]}
+                            onChange={(e) => setOutletSizeRange([Math.min(outletSizeRange[0], parseInt(e.target.value)), parseInt(e.target.value)])}
+                            className="form-range"
+                            style={{ width: "100%" }}
+                          />
+                        </div>
+                      </div>
+                   
                     </div>
                   </AccordionDetails>
                 </Accordion>
 
                 {/* Product Handling Accordion */}
-                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="product-handling-content"
                     id="product-handling-header"
                   >
-                    <Typography>Product Handling</Typography>
+                    <Typography>Outlet Handling</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <div style={{ padding: "8px" }}>
-                      {["Sandwich", "Coffee"].map((product, index) => (
+                      {outletTypes.map((type, index) => (
                         <FormGroup key={index} check className="mb-2">
                           <Input
                             type="checkbox"
-                            id={`product-${index}`}
+                            id={`outlet-type-${index}`}
                             className="form-check-input"
+                            checked={selectedOutletTypes.some(selected => selected.value === type.value)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedOutletTypes([...selectedOutletTypes, type]);
+                              } else {
+                                setSelectedOutletTypes(selectedOutletTypes.filter(selected => selected.value !== type.value));
+                              }
+                              setShowStores(true);
+
+                            }}
                           />
-                          <Label check className="form-check-label" htmlFor={`product-${index}`}>
-                            {product}
+                          <Label check className="form-check-label" htmlFor={`outlet-type-${index}`}>
+                            {type.label}
                           </Label>
                         </FormGroup>
                       ))}
@@ -613,15 +674,24 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <div style={{ padding: "8px" }}>
-                      {["High Income", "Middle Income", "Low Income", "Poor", "Very Poor"].map((income, index) => (
+                      {areaProfiles.map((profile, index) => (
                         <FormGroup key={index} check className="mb-2">
                           <Input
                             type="checkbox"
-                            id={`income-${index}`}
+                            id={`area-profile-${index}`}
                             className="form-check-input"
+                            checked={selectedAreaProfiles.some(selected => selected.value === profile.value)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedAreaProfiles([...selectedAreaProfiles, profile]);
+                              } else {
+                                setSelectedAreaProfiles(selectedAreaProfiles.filter(selected => selected.value !== profile.value));
+                              }
+                              setShowStores(true);
+                            }}
                           />
-                          <Label check className="form-check-label" htmlFor={`income-${index}`}>
-                            {income}
+                          <Label check className="form-check-label" htmlFor={`area-profile-${index}`}>
+                            {profile.label}
                           </Label>
                         </FormGroup>
                       ))}
