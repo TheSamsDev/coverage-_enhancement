@@ -1,15 +1,79 @@
 .store-map-container {
   height: 100vh;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .filter-group {
   flex: 1;
+  width: 100%;
 }
 
 .map-container {
   height: 70vh;
   position: relative;
+}
+
+.stats-cards-container .row {
+  margin: 0 -8px;
+}
+
+.stats-cards-container .col-sm-6 {
+  padding: 0 8px;
+}
+
+.stats-card {
+  transition: transform 0.2s;
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+}
+
+@media (max-width: 1480px) {
+  .store-map-container {
+    padding: 0.25rem;
+  }
+
+  .map-container {
+    height: 60vh;
+  }
+
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+
+  .filter-group .select__control {
+    min-height: 36px;
+  }
+
+  .filter-group .select__menu {
+    font-size: 14px;
+  }
+
+  .stats-cards-container .col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .stats-cards-container .card {
+    margin-bottom: 16px;
+  }
+
+  .stats-cards-container .stats-info h4 {
+    font-size: 1.05rem;
+  }
+
+  .stats-cards-container .stats-info p {
+    font-size: 0.875rem;
+  }
+
+  .stats-cards-container .stats-icon {
+    padding: 3px 8px;
+  }
+
+  .stats-cards-container .stats-icon i {
+    font-size: 20px;
+  }
 }
 
 .store-popup-content {

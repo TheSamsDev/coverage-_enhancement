@@ -3,7 +3,17 @@ import { Map, Source, Layer } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxClusterLayer from "./MapboxClusterLayer";
 import Select from "react-select";
-import { FormGroup, Label, Button, ButtonGroup, Input, Card, CardBody, Row, Col } from "reactstrap";
+import {
+  FormGroup,
+  Label,
+  Button,
+  ButtonGroup,
+  Input,
+  Card,
+  CardBody,
+  Row,
+  Col,
+} from "reactstrap";
 import {
   Box,
   Typography,
@@ -11,8 +21,10 @@ import {
   AccordionDetails,
   AccordionSummary,
 } from "@mui/material";
-import Icon from '@mdi/react';
-import { mdiRefresh } from '@mdi/js';
+import Icon from "@mdi/react";
+import { mdiChevronDown } from "@mdi/js";
+
+import { mdiRefresh } from "@mdi/js";
 import { MAPBOX_CONFIG } from "../../config/mapConfig";
 import "./styles/MapboxStoreMap.css";
 import pakistanGeoJSON from "../../assets/pk.json";
@@ -30,7 +42,18 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   const [selectedOutletTypes, setSelectedOutletTypes] = useState([]);
   const [selectedAreaProfiles, setSelectedAreaProfiles] = useState([]);
   const [selectedFilterType, setSelectedFilterType] = useState(null);
-  const [outletSizeRange, setOutletSizeRange] = useState([0, 1000000]);
+  const [selectedOutletSizes, setSelectedOutletSizes] = useState([]);
+  const [selectedProductCake, setSelectedProductCake] = useState([]);
+  const [selectedProductChoco, setSelectedProductChoco] = useState([]);
+  const outletSizeOptions = [
+    { value: [0, 50000], label: "Up to 50,000" },
+    { value: [50001, 100000], label: "50,001 - 100,000" },
+    { value: [100001, 150000], label: "100,001 - 150,000" },
+    { value: [150001, 250000], label: "150,001 - 250,000" },
+    { value: [250001, 300000], label: "250,000 - 300,000" },
+    { value: [300001, 500000], label: "300,001 - 500,000" },
+    { value: [500001, Infinity], label: "Above 500,000" },
+  ];
   const [viewport, setViewport] = useState({
     latitude: MAPBOX_CONFIG.defaultCenter.lat,
     longitude: MAPBOX_CONFIG.defaultCenter.lng,
@@ -55,7 +78,9 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   }, [stores]);
 
   const territories = useMemo(() => {
-    const uniqueTerritories = [...new Set(stores.map((store) => store.territory))];
+    const uniqueTerritories = [
+      ...new Set(stores.map((store) => store.territory)),
+    ];
     return uniqueTerritories.map((territory) => ({
       value: territory,
       label: territory,
@@ -73,13 +98,33 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   }, [stores]);
 
   const outletTypes = useMemo(() => {
-    const uniqueOutletTypes = [...new Set(stores.map((store) => store.outlet_type))];
+    const uniqueOutletTypes = [
+      ...new Set(stores.map((store) => store.outlet_type)),
+    ];
     return uniqueOutletTypes.map((type) => ({ value: type, label: type }));
   }, [stores]);
 
+  const proCake = useMemo(() => {
+    const uniqueProCake = [
+      ...new Set(stores.map((store) => store.pro_cake)),
+    ];
+    return uniqueProCake.map((pro_cake) => ({ value: pro_cake, label: pro_cake }));
+  }, [stores]);
+  const proChoco = useMemo(() => {
+    const uniqueProChoco = [
+      ...new Set(stores.map((store) => store.pro_choco)),
+    ];
+    return uniqueProChoco.map((pro_choco) => ({ value: pro_choco, label: pro_choco }));
+  }, [stores]);
+
   const areaProfiles = useMemo(() => {
-    const uniqueAreaProfiles = [...new Set(stores.map((store) => store.area_profile))];
-    return uniqueAreaProfiles.map((profile) => ({ value: profile, label: profile }));
+    const uniqueAreaProfiles = [
+      ...new Set(stores.map((store) => store.area_profile)),
+    ];
+    return uniqueAreaProfiles.map((profile) => ({
+      value: profile,
+      label: profile,
+    }));
   }, [stores]);
 
   const filteredStores = useMemo(() => {
@@ -108,19 +153,41 @@ const MapboxStoreMap = ({ stores: propStores }) => {
         );
       const outletTypeMatch =
         !selectedOutletTypes.length ||
-        selectedOutletTypes.some(
-          (type) => type.value === store.outlet_type
+        selectedOutletTypes.some((type) => type.value === store.outlet_type);
+      const outletSizeMatch =
+        selectedOutletSizes.length === 0 ||
+        selectedOutletSizes.some(
+          (range) =>
+            store.outlet_size >= range.value[0] &&
+            store.outlet_size <= range.value[1]
         );
-      const outletSizeMatch = 
-        store.outlet_size >= outletSizeRange[0] && 
-        store.outlet_size <= outletSizeRange[1];
-
       const areaProfileMatch =
         !selectedAreaProfiles.length ||
         selectedAreaProfiles.some(
           (profile) => profile.value === store.area_profile
         );
-      return regionMatch && citynMatch && areaMatch && territoryMatch && distributorMatch && outletTypeMatch && areaProfileMatch && outletSizeMatch;
+      const productCakeMatch =
+        !selectedProductCake.length ||
+        selectedProductCake.some(
+          (pro_cake) => pro_cake.value === store.pro_cake
+        );
+      const productChocoMatch =
+        !selectedProductChoco.length ||
+        selectedProductChoco.some(
+          (pro_choco) => pro_choco.value === store.pro_choco
+        );
+      return (
+        regionMatch &&
+        citynMatch &&
+        areaMatch &&
+        territoryMatch &&
+        distributorMatch &&
+        outletTypeMatch &&
+        areaProfileMatch &&
+        productCakeMatch &&
+        outletSizeMatch &&
+        productChocoMatch
+      );
     });
   }, [
     stores,
@@ -131,7 +198,9 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     selectedDistributors,
     selectedOutletTypes,
     selectedAreaProfiles,
-    outletSizeRange,
+    selectedOutletSizes,
+    selectedProductCake,
+    selectedProductChoco,
     showStores,
   ]);
 
@@ -144,35 +213,6 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     }, 100);
     return () => clearTimeout(timer);
   }, [propStores]);
-
-  // useEffect(() => {
-  //   if (!areas || !territories || !distributors) {
-  //     return;
-  //   }
-
-  //   let filtered = stores.filter((store) => {
-  //     const areaMatch =
-  //       !selectedAreas.length ||
-  //       selectedAreas.some((area) => area.value === store.area);
-  //     const territoryMatch =
-  //       !selectedTerritories.length ||
-  //       selectedTerritories.some(
-  //         (territory) => territory.value === store.territory
-  //       );
-  //     const distributorMatch =
-  //       !selectedDistributors.length ||
-  //       selectedDistributors.some(
-  //         (distributor) => distributor.value === store.distributor
-  //       );
-  //     return areaMatch && territoryMatch && distributorMatch;
-  //   });
-
-  //   if (selectedRegions.length) {
-  //     filtered = filtered.filter((store) =>
-  //       selectedRegions.some((region) => region.value === store.region)
-  //     );
-  //   }
-  // });
 
   const handleFilterTypeChange = (filterType) => {
     setSelectedFilterType(filterType);
@@ -212,9 +252,11 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     // setSelectedTerritories([]);
     // setSelectedDistributors([]);
     // setSelectedFilterType(null);
-    setOutletSizeRange([0, 1000000]);
+    setSelectedOutletSizes([]);
     setSelectedAreaProfiles([]);
     setSelectedOutletTypes([]);
+    setSelectedProductCake([]);
+    setSelectedProductChoco([]);
     // setShowStores(false);
     // setViewport({
     //   latitude: MAPBOX_CONFIG.defaultCenter.lat,
@@ -332,7 +374,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   return (
     <div className="store-map-container">
       <div className="row mb-3">
-        <div className="col-9">
+        <div className="col-lg-9 col-md-6 col-sm-12">
           <div className="d-flex justify-content-between align-items-center">
             <div className="filter-group me-2">
               <Label>Region</Label>
@@ -456,7 +498,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
               className="me-2"
               size="sm"
               onClick={() => setShowStores(!showStores)}
-              style={{ borderColor: !showStores ? '#556ee6' : 'transparent' }}
+              style={{ borderColor: !showStores ? "#556ee6" : "transparent" }}
             >
               SavTrack Shops
             </Button>
@@ -495,16 +537,35 @@ const MapboxStoreMap = ({ stores: propStores }) => {
             </Map>
           </div>
         </div>
-        <div className="col-3" style={{borderRadius: "10px" }}>
+        <div
+          className="col-lg-3 col-md-6 col-sm-12"
+          style={{ borderRadius: "10px" }}
+        >
           <div style={{ marginTop: "20px" }}>
             {/* Stats Cards */}
             <div className="stats-cards-container">
               <Row>
                 <Col sm={6} className="mb-4">
-                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, #8b5cf6, #3b82f6)", borderRadius: "15px" }}>
+                  <Card
+                    className="stats-card h-100"
+                    style={{
+                      background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+                      borderRadius: "15px",
+                    }}
+                  >
                     <CardBody className="d-flex align-items-center">
-                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
-                        <i className="mdi mdi-store text-white" style={{ fontSize: "25px" }}></i>
+                      <div
+                        className="stats-icon me-3"
+                        style={{
+                          background: "rgba(255,255,255,0.2)",
+                          padding: "4px 11px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <i
+                          className="mdi mdi-store text-white"
+                          style={{ fontSize: "25px" }}
+                        ></i>
                       </div>
                       <div className="stats-info text-white">
                         <h4 className="mb-1 text-white">{stores.length}</h4>
@@ -514,39 +575,95 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                   </Card>
                 </Col>
                 <Col sm={6} className="mb-4">
-                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, rgb(191 54 246), rgb(195 53 247)", borderRadius: "15px" }}>
+                  <Card
+                    className="stats-card h-100"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgb(191 54 246), rgb(195 53 247)",
+                      borderRadius: "15px",
+                    }}
+                  >
                     <CardBody className="d-flex align-items-center">
-                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
-                        <i className="mdi mdi-check-circle text-white" style={{ fontSize: "25px" }}></i>
+                      <div
+                        className="stats-icon me-3"
+                        style={{
+                          background: "rgba(255,255,255,0.2)",
+                          padding: "4px 11px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <i
+                          className="mdi mdi-check-circle text-white"
+                          style={{ fontSize: "25px" }}
+                        ></i>
                       </div>
                       <div className="stats-info text-white">
-                        <h4 className="mb-1 text-white">{filteredStores.length}</h4>
+                        <h4 className="mb-1 text-white">
+                          {filteredStores.length}
+                        </h4>
                         <p className="mb-0">Outlets</p>
                       </div>
                     </CardBody>
                   </Card>
                 </Col>
                 <Col sm={6} className="mb-4">
-                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, rgb(127 35 173), rgb(120 34 166))", borderRadius: "15px" }}>
+                  <Card
+                    className="stats-card h-100"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgb(127 35 173), rgb(120 34 166))",
+                      borderRadius: "15px",
+                    }}
+                  >
                     <CardBody className="d-flex align-items-center">
-                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
-                        <i className="mdi mdi-map-marker text-white" style={{ fontSize: "25px" }}></i>
+                      <div
+                        className="stats-icon me-3"
+                        style={{
+                          background: "rgba(255,255,255,0.2)",
+                          padding: "4px 11px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <i
+                          className="mdi mdi-map-marker text-white"
+                          style={{ fontSize: "25px" }}
+                        ></i>
                       </div>
                       <div className="stats-info text-white">
-                        <h4 className="mb-1 text-white">{selectedRegions.length}</h4>
+                        <h4 className="mb-1 text-white">
+                          {selectedRegions.length}
+                        </h4>
                         <p className="mb-0">Regions</p>
                       </div>
                     </CardBody>
                   </Card>
                 </Col>
                 <Col sm={6} className="mb-4">
-                  <Card className="stats-card h-100" style={{ background: "linear-gradient(135deg, #8b5cf6, #3b82f6)", borderRadius: "15px" }}>
+                  <Card
+                    className="stats-card h-100"
+                    style={{
+                      background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+                      borderRadius: "15px",
+                    }}
+                  >
                     <CardBody className="d-flex align-items-center">
-                      <div className="stats-icon me-3" style={{ background: "rgba(255,255,255,0.2)", padding: "4px 11px", borderRadius: "8px" }}>
-                        <i className="mdi mdi-map text-white" style={{ fontSize: "25px" }}></i>
+                      <div
+                        className="stats-icon me-3"
+                        style={{
+                          background: "rgba(255,255,255,0.2)",
+                          padding: "4px 11px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <i
+                          className="mdi mdi-map text-white"
+                          style={{ fontSize: "25px" }}
+                        ></i>
                       </div>
                       <div className="stats-info text-white">
-                        <h4 className="mb-1 text-white">{selectedAreas.length}</h4>
+                        <h4 className="mb-1 text-white">
+                          {selectedAreas.length}
+                        </h4>
                         <p className="mb-0">Areas</p>
                       </div>
                     </CardBody>
@@ -564,7 +681,12 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                   <Button color="info" outline size="sm">
                     <i className="mdi mdi-routes me-1"></i> Routes Data
                   </Button>
-                  <Button color="primary" outline size="sm" onClick={handleResetAll}>
+                  <Button
+                    color="primary"
+                    outline
+                    size="sm"
+                    onClick={handleResetAll}
+                  >
                     <i className="mdi mdi-refresh me-1"></i> Reset Filter
                   </Button>
                 </ButtonGroup>
@@ -572,68 +694,195 @@ const MapboxStoreMap = ({ stores: propStores }) => {
             </div>
 
             {/* Filter Box with Three Accordions */}
-            <Card style={{ background: "#F9F9F9", borderRadius: "10px", marginTop: "20px", border: "none" ,height:"50vh" , overflow:"auto" }}>
+            <Card
+              style={{
+                background: "#F9F9F9",
+                borderRadius: "10px",
+                marginTop: "20px",
+                border: "none",
+                height: "50vh",
+                overflow: "auto",
+              }}
+            >
               <CardBody>
-
-                 {/* <Button color="primary" outline size="sm" onClick={handleResetAll}>
+                {/* <Button color="primary" outline size="sm" onClick={handleResetAll}>
                     <i className="mdi mdi-refresh me-1"></i> Reset Filter
                   </Button> */}
 
-                <Typography sx={{ color: "black", fontWeight: "lighter", marginBottom: "10px" }}>
+                <Typography
+                  sx={{
+                    color: "black",
+                    fontWeight: "lighter",
+                    marginBottom: "10px",
+                  }}
+                >
                   Filters
                 </Typography>
 
                 {/* Outlet Size Profile Accordion */}
-                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }}>
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
                     aria-controls="outlet-size-content"
                     id="outlet-size-header"
+                    sx={{
+                      minHeight: "48px",
+                      "&.Mui-expanded": {
+                        minHeight: "48px",
+                      },
+                    }}
                   >
-                    <Typography>Outlet Size Profile</Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Icon
+                          path={mdiChevronDown}
+                          size={1}
+                          style={{ marginRight: "8px" }}
+                        />
+                        <Typography>Store Monthly Turnover</Typography>
+                      </Box>
+                      <FormGroup check>
+                        <Input
+                          type="checkbox"
+                          id="outlet-size-select-all"
+                          className="form-check-input"
+                          checked={
+                            selectedOutletSizes.length ===
+                            outletSizeOptions.length
+                          }
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedOutletSizes([...outletSizeOptions]);
+                            } else {
+                              setSelectedOutletSizes([]);
+                            }
+                            setShowStores(true);
+                            e.stopPropagation();
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ marginRight: "8px" }}
+                        />
+                        <Label
+                          check
+                          className="form-check-label"
+                          htmlFor="outlet-size-select-all"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Select All
+                        </Label>
+                      </FormGroup>
+                    </Box>
                   </AccordionSummary>
                   <AccordionDetails>
                     <div style={{ padding: "8px" }}>
-                      <div style={{ marginBottom: "10px" }}>
-                        <Typography variant="body2" gutterBottom>
-                          Range: {outletSizeRange[0].toLocaleString()} - {outletSizeRange[1].toLocaleString()}
-                        </Typography>
-                        <div className="d-flex align-items-center gap-2">
-                          <input
-                            type="range"
-                            min="0"
-                            max="1000000"
-                            step="10000"
-                            value={outletSizeRange[0]}
-                            onChange={(e) => setOutletSizeRange([parseInt(e.target.value), Math.max(outletSizeRange[1], parseInt(e.target.value))])}
-                            className="form-range"
-                            style={{ width: "100%" }}
-                          />
-                          <input
-                            type="range"
-                            min="0"
-                            max="1000000"
-                            step="10000"
-                            value={outletSizeRange[1]}
-                            onChange={(e) => setOutletSizeRange([Math.min(outletSizeRange[0], parseInt(e.target.value)), parseInt(e.target.value)])}
-                            className="form-range"
-                            style={{ width: "100%" }}
-                          />
-                        </div>
+                      <div style={{ padding: "8px" }}>
+                        {outletSizeOptions.map((option, index) => (
+                          <FormGroup key={index} check className="mb-2">
+                            <Input
+                              type="checkbox"
+                              id={`outlet-size-${index}`}
+                              className="form-check-input"
+                              checked={selectedOutletSizes.some(
+                                (size) =>
+                                  size.value[0] === option.value[0] &&
+                                  size.value[1] === option.value[1]
+                              )}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedOutletSizes([
+                                    ...selectedOutletSizes,
+                                    option,
+                                  ]);
+                                } else {
+                                  setSelectedOutletSizes(
+                                    selectedOutletSizes.filter(
+                                      (size) =>
+                                        size.value[0] !== option.value[0] ||
+                                        size.value[1] !== option.value[1]
+                                    )
+                                  );
+                                }
+                                setShowStores(true);
+                              }}
+                            />
+                            <Label
+                              check
+                              className="form-check-label"
+                              htmlFor={`outlet-size-${index}`}
+                            >
+                              {option.label}
+                            </Label>
+                          </FormGroup>
+                        ))}
                       </div>
-                   
                     </div>
                   </AccordionDetails>
                 </Accordion>
 
-                {/* Product Handling Accordion */}
-                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} >
+                {/* Outlet Handling Accordion */}
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }}>
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="product-handling-content"
-                    id="product-handling-header"
+                    aria-controls="outlet-size-content"
+                    id="outlet-size-header"
+                    sx={{
+                      minHeight: "48px",
+                      "&.Mui-expanded": {
+                        minHeight: "48px",
+                      },
+                    }}
                   >
-                    <Typography>Outlet Handling</Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Icon
+                          path={mdiChevronDown}
+                          size={1}
+                          style={{ marginRight: "8px" }}
+                        />
+                        <Typography>Outlet Handling</Typography>
+                      </Box>
+                      <FormGroup check>
+                        <Input
+                          type="checkbox"
+                          id="outlet-size-select-all"
+                          className="form-check-input"
+                          checked={
+                            selectedOutletTypes.length === outletTypes.length
+                          }
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedOutletTypes([...outletTypes]);
+                            } else {
+                              setSelectedOutletTypes([]);
+                            }
+                            setShowStores(true);
+                            e.stopPropagation();
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ marginRight: "8px" }}
+                        />
+                        <Label
+                          check
+                          className="form-check-label"
+                          htmlFor="outlet-size-select-all"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Select All
+                        </Label>
+                      </FormGroup>
+                    </Box>
                   </AccordionSummary>
                   <AccordionDetails>
                     <div style={{ padding: "8px" }}>
@@ -643,18 +892,30 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                             type="checkbox"
                             id={`outlet-type-${index}`}
                             className="form-check-input"
-                            checked={selectedOutletTypes.some(selected => selected.value === type.value)}
+                            checked={selectedOutletTypes.some(
+                              (selected) => selected.value === type.value
+                            )}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedOutletTypes([...selectedOutletTypes, type]);
+                                setSelectedOutletTypes([
+                                  ...selectedOutletTypes,
+                                  type,
+                                ]);
                               } else {
-                                setSelectedOutletTypes(selectedOutletTypes.filter(selected => selected.value !== type.value));
+                                setSelectedOutletTypes(
+                                  selectedOutletTypes.filter(
+                                    (selected) => selected.value !== type.value
+                                  )
+                                );
                               }
                               setShowStores(true);
-
                             }}
                           />
-                          <Label check className="form-check-label" htmlFor={`outlet-type-${index}`}>
+                          <Label
+                            check
+                            className="form-check-label"
+                            htmlFor={`outlet-type-${index}`}
+                          >
                             {type.label}
                           </Label>
                         </FormGroup>
@@ -663,14 +924,64 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                   </AccordionDetails>
                 </Accordion>
 
-                {/* Area Profile Accordion (Added as a third option) */}
-                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
+                {/* Area Profile Accordion*/}
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }}>
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="area-profile-content"
-                    id="area-profile-header"
+                    aria-controls="outlet-size-content"
+                    id="outlet-size-header"
+                    sx={{
+                      minHeight: "48px",
+                      "&.Mui-expanded": {
+                        minHeight: "48px",
+                      },
+                    }}
                   >
-                    <Typography>Area Profile</Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Icon
+                          path={mdiChevronDown}
+                          size={1}
+                          style={{ marginRight: "8px" }}
+                        />
+                        <Typography>Area Profile</Typography>
+                      </Box>
+                      <FormGroup check>
+                        <Input
+                          type="checkbox"
+                          id="outlet-size-select-all"
+                          className="form-check-input"
+                          checked={
+                            selectedAreaProfiles.length === areaProfiles.length
+                          }
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedAreaProfiles([...areaProfiles]);
+                            } else {
+                              setSelectedAreaProfiles([]);
+                            }
+                            setShowStores(true);
+                            e.stopPropagation();
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ marginRight: "8px" }}
+                        />
+                        <Label
+                          check
+                          className="form-check-label"
+                          htmlFor="outlet-size-select-all"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Select All
+                        </Label>
+                      </FormGroup>
+                    </Box>
                   </AccordionSummary>
                   <AccordionDetails>
                     <div style={{ padding: "8px" }}>
@@ -680,22 +991,225 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                             type="checkbox"
                             id={`area-profile-${index}`}
                             className="form-check-input"
-                            checked={selectedAreaProfiles.some(selected => selected.value === profile.value)}
+                            checked={selectedAreaProfiles.some(
+                              (selected) => selected.value === profile.value
+                            )}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedAreaProfiles([...selectedAreaProfiles, profile]);
+                                setSelectedAreaProfiles([
+                                  ...selectedAreaProfiles,
+                                  profile,
+                                ]);
                               } else {
-                                setSelectedAreaProfiles(selectedAreaProfiles.filter(selected => selected.value !== profile.value));
+                                setSelectedAreaProfiles(
+                                  selectedAreaProfiles.filter(
+                                    (selected) =>
+                                      selected.value !== profile.value
+                                  )
+                                );
                               }
                               setShowStores(true);
                             }}
                           />
-                          <Label check className="form-check-label" htmlFor={`area-profile-${index}`}>
+                          <Label
+                            check
+                            className="form-check-label"
+                            htmlFor={`area-profile-${index}`}
+                          >
                             {profile.label}
                           </Label>
                         </FormGroup>
                       ))}
                     </div>
+                  </AccordionDetails>
+                </Accordion>
+                {/* Product Handling Accordion */}
+                <Accordion
+                  sx={{ background: "#FFFFFF", boxShadow: "none" }}
+                  defaultExpanded
+                >
+                  <AccordionSummary
+                    aria-controls="product-handling-content"
+                    id="form-check-input"
+                    sx={{
+                      minHeight: "48px",
+                      "&.Mui-expanded": {
+                        minHeight: "48px",
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Icon
+                          path={mdiChevronDown}
+                          size={1}
+                          style={{ marginRight: "8px" }}
+                        />
+                        <Typography>Product Handling</Typography>
+                      </Box>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {/* Add your PRoducts Handling here */}
+                    <Accordion
+                    // sx={{ background: "#FFFFFF" }}
+                    >
+                      <AccordionSummary
+                        aria-controls="categories-content"
+                        id="categories-header"
+                        sx={{
+                          minHeight: "40px",
+                          "&.Mui-expanded": {
+                            minHeight: "40px",
+                          },
+                        }}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Icon
+                            path={mdiChevronDown}
+                            size={0.8}
+                            style={{ marginRight: "8px" }}
+                          />
+                          <Typography variant="body2">Categories</Typography>
+                        </Box>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {/* Add your Category Branches here */}
+                        <Accordion sx={{ background: "#FFFFFF" }}>
+                          <AccordionSummary
+                            aria-controls="categories-content"
+                            id="categories-header"
+                            sx={{
+                              minHeight: "40px",
+                              "&.Mui-expanded": {
+                                minHeight: "40px",
+                              },
+                            }}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <Icon
+                                path={mdiChevronDown}
+                                size={0.8}
+                                style={{ marginRight: "8px" }}
+                              />
+                              <Typography variant="body2">
+                                Cakes
+                              </Typography>
+                            </Box>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            {/* Add your categories Products here */}
+                            <div style={{ padding: "8px" }}>
+                            {proCake.map((pro_cake, index) => (
+                        <FormGroup key={index} check className="mb-2">
+                          <Input
+                            type="checkbox"
+                            id={`pro-cake-${index}`}
+                            className="form-check-input"
+                            checked={selectedProductCake.some(
+                              (selected) => selected.value === pro_cake.value
+                            )}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedProductCake([
+                                  ...selectedProductCake,
+                                  pro_cake,
+                                ]);
+                              } else {
+                                setSelectedProductCake(
+                                  selectedProductCake.filter(
+                                    (selected) =>
+                                      selected.value !== pro_cake.value
+                                  )
+                                );
+                              }
+                              setShowStores(true);
+                            }}
+                          />
+                          <Label
+                            check
+                            className="form-check-label"
+                            htmlFor={`pro-cake-${index}`}
+                          >
+                            {pro_cake.label}
+                          </Label>
+                        </FormGroup>
+                      ))}
+                            </div>
+                          </AccordionDetails>
+                        </Accordion>
+                        <Accordion sx={{ background: "#FFFFFF" }}>
+                          <AccordionSummary
+                            aria-controls="categories-content"
+                            id="categories-header"
+                            sx={{
+                              minHeight: "40px",
+                              "&.Mui-expanded": {
+                                minHeight: "40px",
+                              },
+                            }}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <Icon
+                                path={mdiChevronDown}
+                                size={0.8}
+                                style={{ marginRight: "8px" }}
+                              />
+                              <Typography variant="body2">
+                                Chocolates
+                              </Typography>
+                            </Box>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            {/* Add your categories Products here */}
+                            <div style={{ padding: "8px" }}>
+                            {proChoco.map((pro_choco, index) => (
+                        <FormGroup key={index} check className="mb-2">
+                          <Input
+                            type="checkbox"
+                            id={`pro-choco-${index}`}
+                            className="form-check-input"
+                            checked={selectedProductChoco.some(
+                              (selected) => selected.value === pro_choco.value
+                            )}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedProductChoco([
+                                  ...selectedProductChoco,
+                                  pro_choco,
+                                ]);
+                              } else {
+                                setSelectedProductChoco(
+                                  selectedProductChoco.filter(
+                                    (selected) =>
+                                      selected.value !== pro_choco.value
+                                  )
+                                );
+                              }
+                              setShowStores(true);
+                            }}
+                          />
+                          <Label
+                            check
+                            className="form-check-label"
+                            htmlFor={`pro-choco-${index}`}
+                          >
+                            {pro_choco.label}
+                          </Label>
+                        </FormGroup>
+                      ))}
+                            </div>
+                          </AccordionDetails>
+                        </Accordion>
+                      </AccordionDetails>
+                    </Accordion>
                   </AccordionDetails>
                 </Accordion>
               </CardBody>

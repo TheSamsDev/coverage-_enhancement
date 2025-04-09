@@ -51,7 +51,12 @@ class Accordian extends Component {
                                 
                                                                         <Collapse isOpen={this.state.col1}>
                                                                             <CardBody>
-                                                                            {this.props.answer1}
+                                                                            <div className="form-check mb-3">
+                                                                                <input className="form-check-input" type="checkbox" value="" id="answer1Check" />
+                                                                                <label className="form-check-label" htmlFor="answer1Check">
+                                                                                    {this.props.answer1}
+                                                                                </label>
+                                                                            </div>
                                                                             </CardBody>
                                                                         </Collapse>
                                                                     </Card>
@@ -65,7 +70,12 @@ class Accordian extends Component {
                                                                         </Link>
                                                                         <Collapse isOpen={this.state.col2} >
                                                                             <CardBody>
-                                                                            {this.props.answer2}
+                                                                            <div className="form-check mb-3">
+                                                                                <input className="form-check-input" type="checkbox" value="" id="answer2Check" />
+                                                                                <label className="form-check-label" htmlFor="answer2Check">
+                                                                                    {this.props.answer2}
+                                                                                </label>
+                                                                            </div>
                                                                             </CardBody>
                                                                         </Collapse>
                                                                     </Card>
@@ -79,7 +89,12 @@ class Accordian extends Component {
                                                                         </Link>
                                                                         <Collapse isOpen={this.state.col3}>
                                                                             <CardBody>
-                                                                            {this.props.answer3}
+                                                                            <div className="form-check mb-3">
+                                                                                <input className="form-check-input" type="checkbox" value="" id="answer3Check" />
+                                                                                <label className="form-check-label" htmlFor="answer3Check">
+                                                                                    {this.props.answer3}
+                                                                                </label>
+                                                                            </div>
                                                                             </CardBody>
                                                                         </Collapse>
                                                                     </Card>
@@ -93,7 +108,12 @@ class Accordian extends Component {
                                                                         </Link>
                                                                         <Collapse isOpen={this.state.col4}>
                                                                             <CardBody>
-                                                                            {this.props.answer4}
+                                                                            <div className="form-check mb-3">
+                                                                                <input className="form-check-input" type="checkbox" value="" id="answer4Check" />
+                                                                                <label className="form-check-label" htmlFor="answer4Check">
+                                                                                    {this.props.answer4}
+                                                                                </label>
+                                                                            </div>
                                                                             </CardBody>
                                                                         </Collapse>
                                                                     </Card>
@@ -107,7 +127,12 @@ class Accordian extends Component {
                                                                         </Link>
                                                                         <Collapse isOpen={this.state.col5}>
                                                                             <CardBody>
-                                                                            {this.props.answer5}
+                                                                            <div className="form-check mb-3">
+                                                                                <input className="form-check-input" type="checkbox" value="" id="answer5Check" />
+                                                                                <label className="form-check-label" htmlFor="answer5Check">
+                                                                                    {this.props.answer5}
+                                                                                </label>
+                                                                            </div>
                                                                             </CardBody>
                                                                         </Collapse>
                                                                     </Card>
