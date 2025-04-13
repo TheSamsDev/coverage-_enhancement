@@ -417,7 +417,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
               />
             </div>
             <div className="filter-group me-2">
-              <Label>Territory</Label>
+              <Label>Channel</Label>
               <Select
                 isMulti
                 value={selectedTerritories}
@@ -425,7 +425,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 className="basic-multi-select"
                 classNamePrefix="select"
                 onChange={handleFilterChange("territory")}
-                placeholder="Select Territory..."
+                placeholder="Select Channel..."
               />
             </div>
             <div className="filter-group">
@@ -476,7 +476,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 checked={selectedFilterType === "territory"}
                 onChange={() => handleFilterTypeChange("territory")}
               />
-              <Label check>Territory</Label>
+              <Label check>Channel</Label>
             </FormGroup>
             <FormGroup check inline>
               <Input
@@ -724,7 +724,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 </Typography>
 
                 {/* Outlet Size Profile Accordion */}
-                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }}>
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
                   <AccordionSummary
                     aria-controls="outlet-size-content"
                     id="outlet-size-header"
@@ -1030,7 +1030,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 {/* Product Handling Accordion */}
                 <Accordion
                   sx={{ background: "#FFFFFF", boxShadow: "none" }}
-                  defaultExpanded
+                  
                 >
                   <AccordionSummary
                     aria-controls="product-handling-content"

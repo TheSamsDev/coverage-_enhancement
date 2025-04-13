@@ -56,7 +56,7 @@ class CommingSoon extends Component {
                                                             </Link>
                                                         </div>
 
-                                                        <h4 className="font-size-18 mt-4">Let's get started with Nazox</h4>
+                                                        <h4 className="font-size-18 mt-4">Let's get started with Growmatic</h4>
                                                         <p className="text-muted">It will be as simple as Occidental in fact it will be Occidental.</p>
                                                     </div>
 

@@ -42,7 +42,7 @@ class ForgetPasswordPage extends Component {
                                                             </Link>
                                                         </div>
                                                         <h4 className="font-size-18 mt-4">Reset Password</h4>
-                                                        <p className="text-muted">Reset your password to Nazox.</p>
+                                                        <p className="text-muted">Reset your password to Growmatic.</p>
                                                     </div>
 
                                                     <div className="p-2 mt-5">
@@ -87,7 +87,7 @@ class ForgetPasswordPage extends Component {
 
                                                     <div className="mt-5 text-center">
                                                         <p>Don't have an account? <Link to="/auth-login" className="fw-medium text-primary">Log in</Link></p>
-                                                        <p>© 2021 Nazox. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesdesign</p>
+                                                        <p>© 2021 Growmatic. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesdesign</p>
                                                     </div>
                                                 </div>
                                             </Col>

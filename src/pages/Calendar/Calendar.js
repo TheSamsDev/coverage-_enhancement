@@ -59,7 +59,7 @@ class Calender extends Component {
 
     this.state = {
       breadcrumbItems: [
-        { title: "Nazox", link: "/" },
+        { title: "Growmatic", link: "/" },
         { title: "Calendar", link: "#" },
       ],
       calendarWeekends: true,

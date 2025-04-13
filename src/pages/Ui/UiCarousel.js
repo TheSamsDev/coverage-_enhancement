@@ -26,7 +26,7 @@ class UiCarousel extends Component {
 
   render() {
     // meta title
-document.title = "Carousel | Nazox - React Admin & Dashboard Template"
+document.title = "Carousel | Growmatic - SavTrack Dashboard"
     return (
       <React.Fragment>
         <div className="page-content">

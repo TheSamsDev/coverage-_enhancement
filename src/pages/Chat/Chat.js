@@ -62,7 +62,7 @@ class Chat extends Component {
       Chat_Box_User_isActive: false,
       curMessage: "",
       breadcrumbItems: [
-        { title: "Nazox", link: "/" },
+        { title: "Growmatic", link: "/" },
         { title: "Chat", link: "#" },
       ],
     };

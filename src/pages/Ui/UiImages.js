@@ -41,11 +41,11 @@ class UiImages extends Component {
                                         <p className="card-title-desc">Use classNames <code>.rounded</code> and <code>.rounded-circle</code>.</p>
                                         <Row>
                                             <Col md={6}>
-                                                <img className="rounded me-2" alt="Nazox" width="200" src={img4} />
+                                                <img className="rounded me-2" alt="Growmatic" width="200" src={img4} />
                                             </Col>
                                             <Col md={6}>
                                                 <div className="mt-4 mt-md-0">
-                                                    <img className="rounded-circle avatar-xl" alt="Nazox" src={avatar4} />
+                                                    <img className="rounded-circle avatar-xl" alt="Growmatic" src={avatar4} />
                                                 </div>
                                             </Col>
                                         </Row>
@@ -57,11 +57,11 @@ class UiImages extends Component {
                                         <p className="card-title-desc">In addition to our border-radius utilities, you can use <code className="highlighter-rouge">.img-thumbnail</code> to give an image a rounded 1px border appearance.</p>
                                         <Row>
                                             <Col md={6}>
-                                                <img className="img-thumbnail" alt="Nazox" width="200" src={img3} />
+                                                <img className="img-thumbnail" alt="Growmatic" width="200" src={img3} />
                                             </Col>
                                             <Col md={6}>
                                                 <div className="mt-4 mt-md-0">
-                                                    <img className="img-thumbnail rounded-circle avatar-xl" alt="Nazox" src={avatar3} />
+                                                    <img className="img-thumbnail rounded-circle avatar-xl" alt="Growmatic" src={avatar3} />
                                                 </div>
                                             </Col>
                                         </Row>
@@ -74,7 +74,7 @@ class UiImages extends Component {
                                     <CardBody>
                                         <h4 className="card-title">Responsive images</h4>
                                         <p className="card-title-desc">Images in Bootstrap are made responsive with <code className="highlighter-rouge">.img-fluid</code>. <code className="highlighter-rouge">max-width: 100%;</code> and <code className="highlighter-rouge">height: auto;</code> are applied to the image so that it scales with the parent element.</p>
-                                        <CardImg className="img-fluid" src={img2} alt="Nazox" />
+                                        <CardImg className="img-fluid" src={img2} alt="Growmatic" />
                                     </CardBody>
                                 </Card>
                             </Col>
@@ -94,11 +94,11 @@ class UiImages extends Component {
                                                         <CardText className="mt-2 mb-lg-0"><code>.avatar-sm</code></CardText>
                                                     </Col>
                                                     <Col lg={4}>
-                                                        <CardImg src={avatar4} alt="Nazox" className="rounded avatar-md" />
+                                                        <CardImg src={avatar4} alt="Growmatic" className="rounded avatar-md" />
                                                         <CardText className="mt-2  mb-lg-0"><code>.avatar-md</code></CardText>
                                                     </Col>
                                                     <Col lg={4}>
-                                                        <CardImg src={avatar5} alt="Nazox" className="rounded avatar-lg" />
+                                                        <CardImg src={avatar5} alt="Growmatic" className="rounded avatar-lg" />
                                                         <CardText className="mt-2 mb-lg-0"><code>.avatar-lg</code></CardText>
                                                     </Col>
                                                 </Row>
@@ -106,15 +106,15 @@ class UiImages extends Component {
                                             <Col md={6}>
                                                 <Row>
                                                     <Col lg={4}>
-                                                        <CardImg src={avatar3} alt="Nazox" className="rounded-circle avatar-sm" />
+                                                        <CardImg src={avatar3} alt="Growmatic" className="rounded-circle avatar-sm" />
                                                         <CardText className="mt-2 mb-lg-0"><code>.avatar-sm</code></CardText>
                                                     </Col>
                                                     <Col lg={4}>
-                                                        <CardImg src={avatar4} alt="Nazox" className="rounded-circle avatar-md" />
+                                                        <CardImg src={avatar4} alt="Growmatic" className="rounded-circle avatar-md" />
                                                         <CardText className="mt-2  mb-lg-0"><code>.avatar-md</code></CardText>
                                                     </Col>
                                                     <Col lg={4}>
-                                                        <CardImg src={avatar5} alt="Nazox" className="rounded-circle avatar-lg" />
+                                                        <CardImg src={avatar5} alt="Growmatic" className="rounded-circle avatar-lg" />
                                                         <CardText className="mt-2 mb-lg-0"><code>.avatar-lg</code></CardText>
                                                     </Col>
                                                 </Row>

@@ -19,7 +19,7 @@ class UiAlert extends Component {
   }
 
   render() {
-    document.title = "Alert | Nazox - React Admin & Dashboard Template"
+    document.title = "Alert | Growmatic - SavTrack Dashboard"
     return (
       <React.Fragment>
         <div className="page-content">

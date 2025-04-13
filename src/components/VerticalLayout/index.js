@@ -70,7 +70,7 @@ componentDidMount() {
     currentage = currentage.replaceAll("-" , " ");
     
     document.title =
-      currentage + " | Nazox - Responsive Bootstrap 5 Admin Dashboard";
+      currentage + " | Growmatic - SavTrack Dashboard";
       
     if (this.props.leftSideBarTheme) {
       this.props.changeSidebarTheme(this.props.leftSideBarTheme);

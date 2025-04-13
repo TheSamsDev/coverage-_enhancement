@@ -53,7 +53,7 @@ const Register = (props) => {
                           </div>
 
                           <h4 className="font-size-18">Register account</h4>
-                          <p className="text-muted">Get your free Nazox account now.</p>
+                          <p className="text-muted">Get your free Growmatic account now.</p>
                         </div>
 
                         <div className="p-2 mt-5">
@@ -162,7 +162,7 @@ const Register = (props) => {
 
                             <div className="mt-4 text-center">
                               <p className="mb-0">
-                                By registering you agree to the Nazox{" "}
+                                By registering you agree to the Growmatic{" "}
                                 <Link to="#" className="text-primary">
                                   Terms of Use
                                 </Link>
@@ -179,7 +179,7 @@ const Register = (props) => {
                             </Link>{" "}
                           </p>
                           <p>
-                            © 2021 Nazox. Crafted with{" "}
+                            © 2021 Growmatic. Crafted with{" "}
                             <i className="mdi mdi-heart text-danger"></i> by Themesdesign
                           </p>
                         </div>

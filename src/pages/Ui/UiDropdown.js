@@ -18,7 +18,7 @@ class UiDropdown extends Component {
   }
 
   render() {
-    document.title = "Dropdown | Nazox - React Admin & Dashboard Template"
+    document.title = "Dropdown | Growmatic - SavTrack Dashboard"
     return (
       <React.Fragment>
         <div className="page-content">
