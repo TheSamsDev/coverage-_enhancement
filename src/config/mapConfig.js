@@ -8,7 +8,7 @@ export const MAPBOX_CONFIG = {
   defaultZoom: 4,
   maxZoom: 16,
   minZoom: 5,
-  mapStyle: 'mapbox://styles/mapbox/light-v10',
+  mapStyle: 'mapbox://styles/mapbox/streets-v11',
   clusterOptions: {
     maxZoom: 14,
     radius: 50

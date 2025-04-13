@@ -154,13 +154,17 @@ const MapboxStoreMap = ({ stores: propStores }) => {
       const outletTypeMatch =
         !selectedOutletTypes.length ||
         selectedOutletTypes.some((type) => type.value === store.outlet_type);
-      const outletSizeMatch =
+        const outletSizeMatch =
         selectedOutletSizes.length === 0 ||
-        selectedOutletSizes.some(
-          (range) =>
-            store.outlet_size >= range.value[0] &&
-            store.outlet_size <= range.value[1]
-        );
+        selectedOutletSizes.some((range) => {
+          // Remove commas and convert to number
+          const outletSize = parseFloat(store.outlet_size.replace(/,/g, ""));
+          return (
+            !isNaN(outletSize) &&
+            outletSize >= range.value[0] &&
+            outletSize <= range.value[1]
+          );
+        });;
       const areaProfileMatch =
         !selectedAreaProfiles.length ||
         selectedAreaProfiles.some(
@@ -950,7 +954,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                           size={1}
                           style={{ marginRight: "8px" }}
                         />
-                        <Typography>Area Profile</Typography>
+                        <Typography>Outlet Profile</Typography>
                       </Box>
                       <FormGroup check>
                         <Input

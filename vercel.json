@@ -2,8 +2,8 @@
   "version": 2,
   "build": {
     "env": {
-      "REACT_APP_SUPABASE_URL": "https://zpzcpbgijmpqminpbnqz.supabase.co",
-      "REACT_APP_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwemNwYmdpam1wcW1pbnBibnF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4NTY3NzksImV4cCI6MjA1ODQzMjc3OX0.1SRpX07bd31OLzzKbY46nRfHb96bM_AJJ6yFUMdDTkg",
+      "REACT_APP_SUPABASE_URL": "https://ogviwvganucpsetbjewc.supabase.co",
+      "REACT_APP_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ndml3dmdhbnVjcHNldGJqZXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1NTQwNTgsImV4cCI6MjA2MDEzMDA1OH0.Jtn9los-R_znvFxVrDSNH_GmNjYbdntOazWHTqw49K0",
       "REACT_APP_MAPBOX_ACCESS_TOKEN": "pk.eyJ1Ijoic3llZHphbWFuMDA5NiIsImEiOiJjbThxZGltbGYwaDA4MmtzYW55eHJvazc1In0.x4yA3Enz1S-DtCrrGrPpaQ"
     }
   },

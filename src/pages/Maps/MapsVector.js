@@ -25,17 +25,18 @@ const MapsVector = () => {
           latitude: store.latitude,
           longitude: store.longitude,
           type: store.area_type || "ACQUIRED",
-          region: store.Region,
-          city: store.City,
-          area: store.Area || "Unknown",
-          distributor: store.channel || "Unknown",
+          region: store.region,
+          city: store.city,
+          area: store.area_type || "Unknown",
+          distributor: store.distributor || "Unknown",
           rank: store.rank || "Unknown",
-          territory: store.Territory || "Unknown",
-          outlet_type: store.outlet_type || "Unknown",
-          area_profile: store.area_profile || "Unknown",
-          outlet_size: store.sales_pkr || "Unknown",
-          pro_cake: store.handles_cakes || "Unknown",
-          pro_choco: store.handles_chocolates || "Unknown",
+          territory: store.channel_name || "Unknown",
+
+          outlet_type: store.sub_channel_name || "Unknown",
+          area_profile: store.outlet_profile || "Unknown",
+          outlet_size: store.outlet_profile_size || "Unknown",
+          pro_cake: store.handle_cakes || "Unknown",
+          pro_choco: store.handle_choclates || "Unknown",
           pro_bis: store.handles_biscuits || "Unknown"
         }));
      console.log(mappedStores);
