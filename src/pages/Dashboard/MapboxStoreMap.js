@@ -554,7 +554,6 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 type="geojson"
                 data={pakistanGeoJSON}
               >
-                <Layer {...provinceLayerStyle} />
                 <Layer {...provinceOutlineStyle} />
                 <Layer {...allRegionsHighlightStyle} />
                 <Layer {...highlightedRegionStyle} />
