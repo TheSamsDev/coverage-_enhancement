@@ -44,7 +44,7 @@ const customStyles = `
 const Login = (props) => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: { username: "admin@themesdesign.in", password: "123456" }
+    defaultValues: { username: "admin@gmail.com", password: "admin" }
   });
 
   const mapContainer = useRef(null);

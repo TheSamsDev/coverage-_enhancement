@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { Map, Source, Layer } from "react-map-gl/mapbox";
+import { Map, Source, Layer, NavigationControl } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxClusterLayer from "./MapboxClusterLayer";
 import Select from "react-select";
@@ -15,7 +15,7 @@ import {
   Col,
 } from "reactstrap";
 import {
-  Box,
+  Box, 
   Typography,
   Accordion,
   AccordionDetails,
@@ -45,6 +45,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   const [selectedOutletSizes, setSelectedOutletSizes] = useState([]);
   const [selectedProductCake, setSelectedProductCake] = useState([]);
   const [selectedProductChoco, setSelectedProductChoco] = useState([]);
+  const [selectedProductBisc, setSelectedProductBisc] = useState([]);
   const outletSizeOptions = [
     { value: [0, 50000], label: "Up to 50,000" },
     { value: [50001, 100000], label: "50,001 - 100,000" },
@@ -57,8 +58,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   const [viewport, setViewport] = useState({
     latitude: MAPBOX_CONFIG.defaultCenter.lat,
     longitude: MAPBOX_CONFIG.defaultCenter.lng,
-    zoom: MAPBOX_CONFIG.defaultZoom,
-    bearing: 0,
+    zoom: Math.max(MAPBOX_CONFIG.defaultZoom, MAPBOX_CONFIG.minZoom), // Ensures zoom >= 3    bearing: 0,
     pitch: 0,
   });
 
@@ -105,16 +105,27 @@ const MapboxStoreMap = ({ stores: propStores }) => {
   }, [stores]);
 
   const proCake = useMemo(() => {
-    const uniqueProCake = [
-      ...new Set(stores.map((store) => store.pro_cake)),
-    ];
-    return uniqueProCake.map((pro_cake) => ({ value: pro_cake, label: pro_cake }));
+    const uniqueProCake = [...new Set(stores.map((store) => store.pro_cake))];
+    return uniqueProCake.map((pro_cake) => ({
+      value: pro_cake,
+      label: pro_cake,
+    }));
   }, [stores]);
+
   const proChoco = useMemo(() => {
-    const uniqueProChoco = [
-      ...new Set(stores.map((store) => store.pro_choco)),
-    ];
-    return uniqueProChoco.map((pro_choco) => ({ value: pro_choco, label: pro_choco }));
+    const uniqueProChoco = [...new Set(stores.map((store) => store.pro_choco))];
+    return uniqueProChoco.map((pro_choco) => ({
+      value: pro_choco,
+      label: pro_choco,
+    }));
+  }, [stores]);
+
+  const proBisc = useMemo(() => {
+    const uniqueProBisc = [...new Set(stores.map((store) => store.pro_bisc))];
+    return uniqueProBisc.map((pro_bisc) => ({
+      value: pro_bisc,
+      label: pro_bisc,
+    }));
   }, [stores]);
 
   const areaProfiles = useMemo(() => {
@@ -126,6 +137,8 @@ const MapboxStoreMap = ({ stores: propStores }) => {
       label: profile,
     }));
   }, [stores]);
+
+
 
   const filteredStores = useMemo(() => {
     if (!showStores) {
@@ -154,7 +167,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
       const outletTypeMatch =
         !selectedOutletTypes.length ||
         selectedOutletTypes.some((type) => type.value === store.outlet_type);
-        const outletSizeMatch =
+      const outletSizeMatch =
         selectedOutletSizes.length === 0 ||
         selectedOutletSizes.some((range) => {
           // Remove commas and convert to number
@@ -164,7 +177,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
             outletSize >= range.value[0] &&
             outletSize <= range.value[1]
           );
-        });;
+        });
       const areaProfileMatch =
         !selectedAreaProfiles.length ||
         selectedAreaProfiles.some(
@@ -180,6 +193,11 @@ const MapboxStoreMap = ({ stores: propStores }) => {
         selectedProductChoco.some(
           (pro_choco) => pro_choco.value === store.pro_choco
         );
+      const productBiscMatch =
+        !selectedProductBisc.length ||
+        selectedProductBisc.some(
+          (pro_bisc) => pro_bisc.value === store.pro_bisc
+        );
       return (
         regionMatch &&
         citynMatch &&
@@ -190,7 +208,8 @@ const MapboxStoreMap = ({ stores: propStores }) => {
         areaProfileMatch &&
         productCakeMatch &&
         outletSizeMatch &&
-        productChocoMatch
+        productChocoMatch &&
+        productBiscMatch
       );
     });
   }, [
@@ -205,6 +224,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     selectedOutletSizes,
     selectedProductCake,
     selectedProductChoco,
+    selectedProductBisc,
     showStores,
   ]);
 
@@ -261,6 +281,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
     setSelectedOutletTypes([]);
     setSelectedProductCake([]);
     setSelectedProductChoco([]);
+    setSelectedProductBisc([]);
     // setShowStores(false);
     // setViewport({
     //   latitude: MAPBOX_CONFIG.defaultCenter.lat,
@@ -526,6 +547,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
               mapStyle={MAPBOX_CONFIG.mapStyle}
               mapboxAccessToken={MAPBOX_CONFIG.accessToken}
               maxZoom={MAPBOX_CONFIG.maxZoom}
+              minZoom={MAPBOX_CONFIG.minZoom} 
             >
               <Source
                 id="pakistan-provinces"
@@ -538,6 +560,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 <Layer {...highlightedRegionStyle} />
               </Source>
               <MapboxClusterLayer stores={filteredStores} />
+              <NavigationControl position="top-right" />
             </Map>
           </div>
         </div>
@@ -724,7 +747,10 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                 </Typography>
 
                 {/* Outlet Size Profile Accordion */}
-                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }} defaultExpanded>
+                <Accordion
+                  sx={{ background: "#FFFFFF", boxShadow: "none" }}
+                  defaultExpanded
+                >
                   <AccordionSummary
                     aria-controls="outlet-size-content"
                     id="outlet-size-header"
@@ -1028,10 +1054,7 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                   </AccordionDetails>
                 </Accordion>
                 {/* Product Handling Accordion */}
-                <Accordion
-                  sx={{ background: "#FFFFFF", boxShadow: "none" }}
-                  
-                >
+                <Accordion sx={{ background: "#FFFFFF", boxShadow: "none" }}>
                   <AccordionSummary
                     aria-controls="product-handling-content"
                     id="form-check-input"
@@ -1103,49 +1126,48 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                                 size={0.8}
                                 style={{ marginRight: "8px" }}
                               />
-                              <Typography variant="body2">
-                                Cakes
-                              </Typography>
+                              <Typography variant="body2">Cakes</Typography>
                             </Box>
                           </AccordionSummary>
                           <AccordionDetails>
                             {/* Add your categories Products here */}
                             <div style={{ padding: "8px" }}>
-                            {proCake.map((pro_cake, index) => (
-                        <FormGroup key={index} check className="mb-2">
-                          <Input
-                            type="checkbox"
-                            id={`pro-cake-${index}`}
-                            className="form-check-input"
-                            checked={selectedProductCake.some(
-                              (selected) => selected.value === pro_cake.value
-                            )}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedProductCake([
-                                  ...selectedProductCake,
-                                  pro_cake,
-                                ]);
-                              } else {
-                                setSelectedProductCake(
-                                  selectedProductCake.filter(
-                                    (selected) =>
-                                      selected.value !== pro_cake.value
-                                  )
-                                );
-                              }
-                              setShowStores(true);
-                            }}
-                          />
-                          <Label
-                            check
-                            className="form-check-label"
-                            htmlFor={`pro-cake-${index}`}
-                          >
-                            {pro_cake.label}
-                          </Label>
-                        </FormGroup>
-                      ))}
+                              {proCake.map((pro_cake, index) => (
+                                <FormGroup key={index} check className="mb-2">
+                                  <Input
+                                    type="checkbox"
+                                    id={`pro-cake-${index}`}
+                                    className="form-check-input"
+                                    checked={selectedProductCake.some(
+                                      (selected) =>
+                                        selected.value === pro_cake.value
+                                    )}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedProductCake([
+                                          ...selectedProductCake,
+                                          pro_cake,
+                                        ]);
+                                      } else {
+                                        setSelectedProductCake(
+                                          selectedProductCake.filter(
+                                            (selected) =>
+                                              selected.value !== pro_cake.value
+                                          )
+                                        );
+                                      }
+                                      setShowStores(true);
+                                    }}
+                                  />
+                                  <Label
+                                    check
+                                    className="form-check-label"
+                                    htmlFor={`pro-cake-${index}`}
+                                  >
+                                    {pro_cake.label}
+                                  </Label>
+                                </FormGroup>
+                              ))}
                             </div>
                           </AccordionDetails>
                         </Accordion>
@@ -1174,41 +1196,106 @@ const MapboxStoreMap = ({ stores: propStores }) => {
                           <AccordionDetails>
                             {/* Add your categories Products here */}
                             <div style={{ padding: "8px" }}>
-                            {proChoco.map((pro_choco, index) => (
-                        <FormGroup key={index} check className="mb-2">
-                          <Input
-                            type="checkbox"
-                            id={`pro-choco-${index}`}
-                            className="form-check-input"
-                            checked={selectedProductChoco.some(
-                              (selected) => selected.value === pro_choco.value
-                            )}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedProductChoco([
-                                  ...selectedProductChoco,
-                                  pro_choco,
-                                ]);
-                              } else {
-                                setSelectedProductChoco(
-                                  selectedProductChoco.filter(
-                                    (selected) =>
-                                      selected.value !== pro_choco.value
-                                  )
-                                );
-                              }
-                              setShowStores(true);
+                              {proChoco.map((pro_choco, index) => (
+                                <FormGroup key={index} check className="mb-2">
+                                  <Input
+                                    type="checkbox"
+                                    id={`pro-choco-${index}`}
+                                    className="form-check-input"
+                                    checked={selectedProductChoco.some(
+                                      (selected) =>
+                                        selected.value === pro_choco.value
+                                    )}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedProductChoco([
+                                          ...selectedProductChoco,
+                                          pro_choco,
+                                        ]);
+                                      } else {
+                                        setSelectedProductChoco(
+                                          selectedProductChoco.filter(
+                                            (selected) =>
+                                              selected.value !== pro_choco.value
+                                          )
+                                        );
+                                      }
+                                      setShowStores(true);
+                                    }}
+                                  />
+                                  <Label
+                                    check
+                                    className="form-check-label"
+                                    htmlFor={`pro-choco-${index}`}
+                                  >
+                                    {pro_choco.label}
+                                  </Label>
+                                </FormGroup>
+                              ))}
+                            </div>
+                          </AccordionDetails>
+                        </Accordion>
+                        <Accordion sx={{ background: "#FFFFFF" }}>
+                          <AccordionSummary
+                            aria-controls="categories-content"
+                            id="categories-header"
+                            sx={{
+                              minHeight: "40px",
+                              "&.Mui-expanded": {
+                                minHeight: "40px",
+                              },
                             }}
-                          />
-                          <Label
-                            check
-                            className="form-check-label"
-                            htmlFor={`pro-choco-${index}`}
                           >
-                            {pro_choco.label}
-                          </Label>
-                        </FormGroup>
-                      ))}
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <Icon
+                                path={mdiChevronDown}
+                                size={0.8}
+                                style={{ marginRight: "8px" }}
+                              />
+                              <Typography variant="body2">
+                                Biscuits
+                              </Typography>
+                            </Box>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            {/* Add your categories Products here */}
+                            <div style={{ padding: "8px" }}>
+                              {proBisc.map((pro_bisc, index) => (
+                                <FormGroup key={index} check className="mb-2">
+                                  <Input
+                                    type="checkbox"
+                                    id={`pro-bisc-${index}`}
+                                    className="form-check-input"
+                                    checked={selectedProductBisc.some(
+                                      (selected) =>
+                                        selected.value === pro_bisc.value
+                                    )}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedProductBisc([
+                                          ...selectedProductBisc,
+                                          pro_bisc,
+                                        ]);
+                                      } else {
+                                        setSelectedProductBisc(
+                                          selectedProductBisc.filter(
+                                            (selected) =>
+                                              selected.value !== pro_bisc.value
+                                          )
+                                        );
+                                      }
+                                      setShowStores(true);
+                                    }}
+                                  />
+                                  <Label
+                                    check
+                                    className="form-check-label"
+                                    htmlFor={`pro-bisc-${index}`}
+                                  >
+                                    {pro_bisc.label}
+                                  </Label>
+                                </FormGroup>
+                              ))}
                             </div>
                           </AccordionDetails>
                         </Accordion>

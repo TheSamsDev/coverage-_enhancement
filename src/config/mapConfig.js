@@ -6,17 +6,12 @@ export const MAPBOX_CONFIG = {
     lng: 68.3451, // Pakistan center
   },
   defaultZoom: 4,
-  maxZoom: 16,
-  minZoom: 5,
+  maxZoom: 12,
+  minZoom: 4,
   mapStyle: 'mapbox://styles/mapbox/streets-v11',
   clusterOptions: {
-    maxZoom: 14,
+    maxZoom: 16,
     radius: 50
   },
-  bounds: {
-    north: 37.0841, // Pakistan northern boundary
-    south: 23.6345, // Pakistan southern boundary
-    east: 77.8375,  // Pakistan eastern boundary
-    west: 60.8729   // Pakistan western boundary
-  }
+  
 };

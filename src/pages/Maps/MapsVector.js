@@ -37,7 +37,7 @@ const MapsVector = () => {
           outlet_size: store.outlet_profile_size || "Unknown",
           pro_cake: store.handle_cakes || "Unknown",
           pro_choco: store.handle_choclates || "Unknown",
-          pro_bis: store.handles_biscuits || "Unknown"
+          pro_bisc: store.handles_biscuits || "Unknown"
         }));
      console.log(mappedStores);
         // Set the fetched data to the state variables
